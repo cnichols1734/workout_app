@@ -9,281 +9,427 @@
   <meta name="theme-color" content="#1a1a2e" />
   <title>8-Week Workout Program</title>
   <!-- Updated deployment trigger -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-card: rgba(22, 27, 34, 0.8);
+      --accent-orange: #f39c12;
+      --accent-orange-glow: rgba(243, 156, 18, 0.4);
+      --accent-red: #e74c3c;
+      --accent-blue: #3498db;
+      --accent-green: #2ecc71;
+      --text-primary: #f0f6fc;
+      --text-secondary: #8b949e;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-medium: rgba(255, 255, 255, 0.12);
+    }
+    
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
     body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif; 
+      background: var(--bg-primary);
       min-height: 100vh; 
+      min-height: -webkit-fill-available;
       overflow-x: hidden; 
-      color: #ffffff; 
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(243, 156, 18, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(52, 152, 219, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 30% at 0% 80%, rgba(231, 76, 60, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
     }
     
     /* Header */
     .header { 
-      background: linear-gradient(180deg, rgba(14, 20, 39, 0.95) 0%, rgba(22, 33, 62, 0.9) 100%);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
-      padding: 20px 16px; 
+      background: linear-gradient(180deg, rgba(13, 17, 23, 0.98) 0%, rgba(13, 17, 23, 0.92) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 18px 20px; 
       position: sticky; 
       top: 0; 
       z-index: 50;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
     .header-content { display: flex; justify-content: space-between; align-items: center; }
-    .header-title { font-size: 26px; font-weight: 800; color: #f39c12; letter-spacing: -0.5px; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); }
-    .header-subtitle { color: #95a5a6; font-size: 12px; margin-top: 2px; font-weight: 500; }
+    .header-title { 
+      font-size: 22px; 
+      font-weight: 800; 
+      color: var(--accent-orange); 
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-subtitle { 
+      color: var(--text-secondary); 
+      font-size: 12px; 
+      margin-top: 3px; 
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
     .nav-tabs { display: flex; gap: 8px; }
     .nav-tab { 
-      padding: 8px 14px; 
-      border-radius: 8px; 
+      padding: 10px 16px; 
+      border-radius: 10px; 
       background: transparent; 
-      border: 1px solid rgba(255, 255, 255, 0.15); 
-      color: #95a5a6; 
-      font-size: 12px; 
-      font-weight: 700; 
+      border: 1px solid var(--border-medium);
+      color: var(--text-secondary); 
+      font-size: 13px; 
+      font-weight: 600; 
       cursor: pointer; 
-      transition: all 0.2s; 
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       text-transform: uppercase; 
-      letter-spacing: 0.5px; 
+      letter-spacing: 0.8px;
     }
-    .nav-tab.active { background: #f39c12; color: #1a1a2e; border-color: #f39c12; box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3); }
-    .nav-tab:active { transform: scale(0.95); }
+    .nav-tab.active { 
+      background: linear-gradient(135deg, var(--accent-orange) 0%, #e67e22 100%);
+      color: #000; 
+      border-color: transparent;
+      box-shadow: 0 4px 20px var(--accent-orange-glow), inset 0 1px 0 rgba(255,255,255,0.2);
+      font-weight: 700;
+    }
+    .nav-tab:active { transform: scale(0.94); }
     
     /* Pages */
-    .page { display: none; }
+    .page { display: none; animation: fadeIn 0.3s ease; }
     .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     
     /* Week Tabs */
-    .week-tabs-container { padding: 16px; }
+    .week-tabs-container { padding: 20px 20px 16px 20px; }
     .week-tabs-scroll { 
       display: flex; 
-      gap: 8px; 
+      gap: 10px; 
       overflow-x: auto; 
       -webkit-overflow-scrolling: touch;
       padding-bottom: 8px;
       scrollbar-width: none;
+      scroll-snap-type: x mandatory;
     }
     .week-tabs-scroll::-webkit-scrollbar { display: none; }
     .week-tab { 
-      min-width: 100px;
-      padding: 12px 16px; 
-      border-radius: 12px; 
-      background: rgba(255, 255, 255, 0.05); 
-      border: 1px solid rgba(255, 255, 255, 0.1); 
+      min-width: 95px;
+      padding: 14px 18px; 
+      border-radius: 14px; 
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
       cursor: pointer; 
-      transition: all 0.2s;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       flex-shrink: 0;
+      scroll-snap-align: start;
+      backdrop-filter: blur(10px);
     }
-    .week-tab:active { transform: scale(0.96); }
+    .week-tab:active { transform: scale(0.95); }
     .week-tab.active { 
-      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); 
-      border-color: #e74c3c;
-      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+      background: linear-gradient(135deg, var(--accent-red) 0%, #c0392b 100%);
+      border-color: transparent;
+      box-shadow: 0 6px 24px rgba(231, 76, 60, 0.35), inset 0 1px 0 rgba(255,255,255,0.15);
     }
-    .week-number { font-size: 18px; font-weight: 800; color: #ffffff; margin-bottom: 4px; }
-    .week-progress { font-size: 11px; color: rgba(255, 255, 255, 0.7); font-weight: 600; }
+    .week-number { font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; letter-spacing: -0.3px; }
+    .week-progress { font-size: 11px; color: rgba(255, 255, 255, 0.6); font-weight: 600; }
+    .week-tab.active .week-progress { color: rgba(255, 255, 255, 0.85); }
     
     /* Day Tabs */
-    .day-tabs-container { padding: 0 16px 16px 16px; }
-    .day-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .day-tabs-container { padding: 0 20px 20px 20px; }
+    .day-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .day-tab { 
-      padding: 16px; 
-      border-radius: 12px; 
-      background: rgba(255, 255, 255, 0.05); 
-      border: 1px solid rgba(255, 255, 255, 0.1); 
+      padding: 18px 14px; 
+      border-radius: 16px; 
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
       cursor: pointer; 
-      transition: all 0.2s;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       text-align: center;
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+    .day-tab::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: transparent;
+      transition: background 0.25s ease;
     }
     .day-tab:active { transform: scale(0.96); }
     .day-tab.active { 
-      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); 
-      border-color: #3498db;
-      box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+      background: linear-gradient(180deg, rgba(52, 152, 219, 0.2) 0%, rgba(52, 152, 219, 0.08) 100%);
+      border-color: rgba(52, 152, 219, 0.4);
+      box-shadow: 0 6px 24px rgba(52, 152, 219, 0.2);
+    }
+    .day-tab.active::before {
+      background: linear-gradient(90deg, var(--accent-blue) 0%, #2980b9 100%);
     }
     .day-tab.completed { 
-      background: linear-gradient(135deg, rgba(46, 204, 113, 0.2) 0%, rgba(39, 174, 96, 0.15) 100%); 
-      border-color: rgba(46, 204, 113, 0.4);
+      background: linear-gradient(180deg, rgba(46, 204, 113, 0.15) 0%, rgba(46, 204, 113, 0.05) 100%);
+      border-color: rgba(46, 204, 113, 0.3);
+    }
+    .day-tab.completed::before {
+      background: linear-gradient(90deg, var(--accent-green) 0%, #27ae60 100%);
     }
     .day-tab.completed.active {
-      background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-      border-color: #2ecc71;
-      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+      background: linear-gradient(180deg, rgba(46, 204, 113, 0.25) 0%, rgba(46, 204, 113, 0.1) 100%);
+      border-color: rgba(46, 204, 113, 0.5);
+      box-shadow: 0 6px 24px rgba(46, 204, 113, 0.25);
     }
-    .day-name { font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
-    .day-subtitle { font-size: 11px; color: rgba(255, 255, 255, 0.7); font-weight: 600; }
+    .day-name { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+    .day-subtitle { font-size: 11px; color: var(--text-secondary); font-weight: 500; line-height: 1.3; }
     .day-date { 
       font-size: 10px; 
-      color: rgba(46, 204, 113, 0.9); 
+      color: var(--accent-green);
       font-weight: 700; 
-      margin-top: 4px;
+      margin-top: 6px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    .day-check { margin-top: 6px; font-size: 18px; }
+    .day-check { margin-top: 8px; font-size: 20px; filter: drop-shadow(0 2px 4px rgba(46, 204, 113, 0.3)); }
     
     /* Week Info Banner */
     .week-info-banner {
-      margin: 0 16px 16px 16px;
-      padding: 16px;
-      background: linear-gradient(135deg, rgba(243, 156, 18, 0.15) 0%, rgba(230, 126, 34, 0.1) 100%);
-      border: 1px solid rgba(243, 156, 18, 0.3);
-      border-radius: 12px;
+      margin: 0 20px 20px 20px;
+      padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(243, 156, 18, 0.12) 0%, rgba(243, 156, 18, 0.04) 100%);
+      border: 1px solid rgba(243, 156, 18, 0.2);
+      border-radius: 14px;
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
     }
-    .week-info-title { font-size: 14px; font-weight: 700; color: #f39c12; margin-bottom: 8px; }
-    .week-info-text { font-size: 12px; color: #bdc3c7; line-height: 1.5; }
+    .week-info-banner::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--accent-orange) 0%, #e67e22 100%);
+    }
+    .week-info-title { font-size: 13px; font-weight: 700; color: var(--accent-orange); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .week-info-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
     
     /* Workout Container */
-    .workout-container { padding: 0 16px 100px 16px; }
+    .workout-container { padding: 0 20px 120px 20px; }
     
     /* Exercise Card */
     .exercise-card { 
-      background: rgba(255, 255, 255, 0.05); 
-      border: 1px solid rgba(255, 255, 255, 0.1); 
-      border-radius: 12px; 
-      padding: 16px; 
-      margin-bottom: 12px;
-      transition: all 0.2s;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px; 
+      padding: 18px; 
+      margin-bottom: 14px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
+      position: relative;
+    }
+    .exercise-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      padding: 1px;
+      background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.05) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
     }
     .exercise-card:active { transform: scale(0.98); }
     .exercise-card.completed { 
-      background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(39, 174, 96, 0.1) 100%);
-      border-color: rgba(46, 204, 113, 0.4);
+      background: linear-gradient(135deg, rgba(46, 204, 113, 0.12) 0%, rgba(46, 204, 113, 0.04) 100%);
+      border-color: rgba(46, 204, 113, 0.3);
+    }
+    .exercise-card.completed::after {
+      background: linear-gradient(135deg, rgba(46, 204, 113, 0.3) 0%, transparent 50%);
     }
     
-    .exercise-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-    .exercise-name { font-size: 16px; font-weight: 700; color: #ffffff; flex: 1; }
+    .exercise-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+    .exercise-name { font-size: 15px; font-weight: 600; color: var(--text-primary); flex: 1; line-height: 1.4; padding-right: 12px; }
     .complete-btn { 
-      width: 36px; 
-      height: 36px; 
-      border-radius: 50%; 
-      border: 2px solid rgba(255, 255, 255, 0.2); 
-      background: transparent; 
-      color: #95a5a6; 
+      width: 40px; 
+      height: 40px; 
+      border-radius: 12px;
+      border: 2px solid var(--border-medium);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-secondary); 
       font-size: 18px; 
       cursor: pointer; 
-      transition: all 0.2s;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       flex-shrink: 0;
-      margin-left: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .exercise-card.completed .complete-btn { 
-      background: #2ecc71; 
-      border-color: #27ae60; 
-      color: #ffffff; 
+      background: linear-gradient(135deg, var(--accent-green) 0%, #27ae60 100%);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(46, 204, 113, 0.35);
     }
-    .complete-btn:active { transform: scale(0.9); }
+    .complete-btn:active { transform: scale(0.88); }
     
-    .exercise-details { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-    .detail-label { font-size: 10px; color: #95a5a6; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; margin-bottom: 4px; }
+    .exercise-details { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .detail-group { display: flex; flex-direction: column; }
+    .detail-label { 
+      font-size: 10px; 
+      color: var(--text-secondary); 
+      text-transform: uppercase; 
+      letter-spacing: 0.8px; 
+      font-weight: 600; 
+      margin-bottom: 6px;
+    }
     .detail-input { 
       width: 100%; 
-      padding: 10px; 
-      border-radius: 8px; 
-      border: 1px solid rgba(255, 255, 255, 0.15); 
-      background: rgba(0, 0, 0, 0.2); 
-      font-size: 15px; 
-      font-weight: 700; 
-      color: #ffffff; 
-      text-align: center;
-    }
-    .detail-input::placeholder { color: rgba(255, 255, 255, 0.3); }
-    .exercise-card.completed .detail-input { background: rgba(46, 204, 113, 0.1); border-color: rgba(46, 204, 113, 0.3); }
-    
-    .weight-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .weight-input { 
-      width: 100%; 
-      padding: 12px; 
-      border-radius: 8px; 
-      border: 1px solid rgba(255, 255, 255, 0.15); 
-      background: rgba(0, 0, 0, 0.2); 
+      padding: 12px 8px;
+      border-radius: 10px; 
+      border: 1px solid var(--border-subtle);
+      background: rgba(0, 0, 0, 0.25);
       font-size: 16px; 
       font-weight: 700; 
-      color: #ffffff; 
+      color: var(--text-primary); 
       text-align: center;
+      transition: all 0.2s ease;
+      font-family: 'DM Sans', sans-serif;
     }
-    .weight-input::placeholder { color: rgba(255, 255, 255, 0.3); }
+    .detail-input:focus {
+      outline: none;
+      border-color: var(--accent-orange);
+      box-shadow: 0 0 0 3px var(--accent-orange-glow);
+    }
+    .detail-input::placeholder { color: rgba(255, 255, 255, 0.25); }
+    .exercise-card.completed .detail-input { 
+      background: rgba(46, 204, 113, 0.08); 
+      border-color: rgba(46, 204, 113, 0.25);
+    }
+    
+    .weight-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .weight-input { 
+      width: 100%; 
+      padding: 14px; 
+      border-radius: 10px; 
+      border: 1px solid var(--border-subtle);
+      background: rgba(0, 0, 0, 0.25);
+      font-size: 17px; 
+      font-weight: 700; 
+      color: var(--text-primary); 
+      text-align: center;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .weight-input::placeholder { color: rgba(255, 255, 255, 0.25); }
     .weight-label { 
       display: flex; 
       align-items: center; 
       justify-content: center;
       font-size: 12px; 
-      font-weight: 700; 
-      color: #95a5a6; 
+      font-weight: 600; 
+      color: var(--text-secondary);
       text-transform: uppercase; 
       letter-spacing: 0.5px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
     }
     
     /* Custom Exercise Section */
     .custom-exercise-section { 
-      margin-top: 20px; 
-      padding-top: 20px; 
-      border-top: 2px solid rgba(255, 255, 255, 0.1); 
+      margin-top: 28px; 
+      padding-top: 24px; 
+      border-top: 1px solid var(--border-subtle);
     }
     .custom-exercise-title { 
-      font-size: 16px; 
+      font-size: 14px; 
       font-weight: 700; 
-      color: #f39c12; 
-      margin-bottom: 12px; 
+      color: var(--accent-orange); 
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     .custom-input { 
       width: 100%; 
-      padding: 12px; 
-      border-radius: 8px; 
-      border: 1px solid rgba(255, 255, 255, 0.15); 
-      background: rgba(0, 0, 0, 0.2); 
-      font-size: 14px; 
-      color: #ffffff; 
-      margin-bottom: 10px; 
-      font-weight: 600; 
+      padding: 14px 16px;
+      border-radius: 12px; 
+      border: 1px solid var(--border-subtle);
+      background: rgba(0, 0, 0, 0.25);
+      font-size: 15px; 
+      color: var(--text-primary); 
+      margin-bottom: 12px; 
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s ease;
+    }
+    .custom-input:focus {
+      outline: none;
+      border-color: var(--accent-orange);
+      box-shadow: 0 0 0 3px var(--accent-orange-glow);
     }
     .custom-input::placeholder { color: rgba(255, 255, 255, 0.3); }
-    .custom-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .custom-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
     .add-custom-btn { 
       width: 100%; 
-      padding: 14px; 
-      border-radius: 8px; 
-      background: rgba(243, 156, 18, 0.2); 
-      border: 1px solid rgba(243, 156, 18, 0.3); 
-      color: #f39c12; 
+      padding: 16px; 
+      border-radius: 12px; 
+      background: linear-gradient(135deg, rgba(243, 156, 18, 0.15) 0%, rgba(243, 156, 18, 0.08) 100%);
+      border: 1px solid rgba(243, 156, 18, 0.25);
+      color: var(--accent-orange); 
       font-size: 14px; 
       font-weight: 700; 
-      cursor: pointer; 
-      margin-top: 8px; 
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    .add-custom-btn:active { transform: scale(0.98); }
+    .add-custom-btn:active { transform: scale(0.97); background: rgba(243, 156, 18, 0.2); }
     
     /* Save Button */
     .save-workout-btn { 
       width: 100%; 
-      padding: 18px; 
-      border-radius: 12px; 
+      padding: 20px; 
+      border-radius: 14px; 
       border: none; 
-      background: linear-gradient(135deg, rgba(46, 204, 113, 0.3) 0%, rgba(39, 174, 96, 0.3) 100%); 
-      color: rgba(255, 255, 255, 0.5); 
-      font-size: 16px; 
+      background: linear-gradient(135deg, rgba(46, 204, 113, 0.2) 0%, rgba(46, 204, 113, 0.1) 100%);
+      border: 1px solid rgba(46, 204, 113, 0.2);
+      color: rgba(255, 255, 255, 0.4); 
+      font-size: 15px; 
       font-weight: 700; 
       text-transform: uppercase; 
-      letter-spacing: 1px; 
+      letter-spacing: 1.5px; 
       cursor: pointer; 
-      transition: all 0.2s; 
-      margin-top: 8px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-top: 20px;
     }
-    .save-workout-btn:active { transform: scale(0.98); }
+    .save-workout-btn:active { transform: scale(0.97); }
     .save-workout-btn.ready { 
-      background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); 
-      color: #ffffff;
-      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+      background: linear-gradient(135deg, var(--accent-green) 0%, #27ae60 100%);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 8px 32px rgba(46, 204, 113, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
     }
     
     /* Stats Page */
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 20px; }
     .backup-section { 
-      padding: 16px; 
-      margin-bottom: 16px;
+      padding: 0 20px 20px 20px;
     }
     .backup-buttons { 
       display: grid; 
@@ -291,84 +437,118 @@
       gap: 12px; 
     }
     .backup-btn { 
-      padding: 14px; 
-      border-radius: 12px; 
-      border: 1px solid rgba(255, 255, 255, 0.2); 
-      background: rgba(255, 255, 255, 0.05); 
-      color: #ffffff; 
-      font-size: 13px; 
-      font-weight: 700; 
-      cursor: pointer; 
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-    .backup-btn:active { transform: scale(0.96); }
-    .backup-btn.download { border-color: rgba(46, 204, 113, 0.3); color: #2ecc71; }
-    .backup-btn.upload { border-color: rgba(52, 152, 219, 0.3); color: #3498db; }
-    .stat-card { 
-      background: rgba(255, 255, 255, 0.05); 
-      border: 1px solid rgba(255, 255, 255, 0.1); 
-      border-radius: 12px; 
-      padding: 20px; 
-      text-align: center; 
-    }
-    .stat-value { font-size: 32px; font-weight: 800; color: #f39c12; margin-bottom: 4px; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); }
-    .stat-label { font-size: 11px; color: #95a5a6; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
-    
-    .history-section { padding: 0 16px 100px 16px; }
-    .section-title { font-size: 20px; font-weight: 800; color: #ffffff; margin-bottom: 16px; letter-spacing: -0.3px; }
-    .history-card { 
-      background: rgba(255, 255, 255, 0.05); 
-      border: 1px solid rgba(255, 255, 255, 0.1); 
-      border-radius: 12px; 
-      padding: 18px; 
-      margin-bottom: 12px; 
-    }
-    .history-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-    .history-workout-name { font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
-    .history-date { font-size: 11px; color: #95a5a6; font-weight: 600; }
-    .history-badge { 
-      padding: 6px 12px; 
-      border-radius: 8px; 
-      background: rgba(243, 156, 18, 0.2); 
-      color: #f39c12; 
-      font-size: 11px; 
-      font-weight: 700; 
-      text-transform: uppercase; 
-      letter-spacing: 0.5px;
-      border: 1px solid rgba(243, 156, 18, 0.3);
-    }
-    .history-actions { display: flex; align-items: center; gap: 8px; }
-    .delete-btn { 
-      padding: 6px 10px; 
-      border-radius: 8px; 
-      background: transparent; 
-      border: 1px solid rgba(231, 76, 60, 0.3); 
-      color: #e74c3c; 
+      padding: 16px; 
+      border-radius: 14px; 
+      border: 1px solid var(--border-medium);
+      background: var(--bg-card);
+      color: var(--text-primary); 
       font-size: 12px; 
       font-weight: 700; 
       cursor: pointer; 
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      backdrop-filter: blur(10px);
     }
-    .delete-btn:active { transform: scale(0.95); }
-    .history-exercises { display: grid; gap: 6px; }
+    .backup-btn:active { transform: scale(0.95); }
+    .backup-btn.download { 
+      border-color: rgba(46, 204, 113, 0.25); 
+      color: var(--accent-green);
+      background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, transparent 100%);
+    }
+    .backup-btn.upload { 
+      border-color: rgba(52, 152, 219, 0.25); 
+      color: var(--accent-blue);
+      background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, transparent 100%);
+    }
+    .stat-card { 
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px; 
+      padding: 24px 20px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(243, 156, 18, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .stat-value { 
+      font-size: 36px; 
+      font-weight: 800; 
+      background: linear-gradient(135deg, var(--accent-orange) 0%, #e67e22 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+      position: relative;
+    }
+    .stat-label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; position: relative; }
+    
+    .history-section { padding: 0 20px 120px 20px; }
+    .section-title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 18px; letter-spacing: -0.3px; }
+    .history-card { 
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px; 
+      padding: 18px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(10px);
+    }
+    .history-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; gap: 12px; }
+    .history-workout-name { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; line-height: 1.4; }
+    .history-date { font-size: 11px; color: var(--text-secondary); font-weight: 500; }
+    .history-badge { 
+      padding: 6px 10px;
+      border-radius: 8px; 
+      background: linear-gradient(135deg, rgba(243, 156, 18, 0.15) 0%, rgba(243, 156, 18, 0.08) 100%);
+      color: var(--accent-orange); 
+      font-size: 10px; 
+      font-weight: 700; 
+      text-transform: uppercase; 
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(243, 156, 18, 0.2);
+      white-space: nowrap;
+    }
+    .history-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .delete-btn { 
+      padding: 6px 10px;
+      border-radius: 8px; 
+      background: transparent; 
+      border: 1px solid rgba(231, 76, 60, 0.25);
+      color: var(--accent-red); 
+      font-size: 11px; 
+      font-weight: 700; 
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .delete-btn:active { transform: scale(0.94); background: rgba(231, 76, 60, 0.1); }
+    .history-exercises { display: grid; gap: 8px; }
     .history-exercise { 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
-      padding: 8px 12px; 
-      background: rgba(0, 0, 0, 0.2); 
-      border-radius: 8px; 
-      font-size: 12px; 
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px; 
+      font-size: 12px;
     }
-    .history-exercise-name { color: #bdc3c7; font-weight: 600; }
-    .history-exercise-details { color: #ffffff; font-weight: 700; }
+    .history-exercise-name { color: var(--text-secondary); font-weight: 500; flex: 1; }
+    .history-exercise-details { color: var(--text-primary); font-weight: 700; font-size: 13px; }
     
-    .empty-state { text-align: center; padding: 60px 20px; color: #95a5a6; }
-    .empty-state-icon { font-size: 64px; margin-bottom: 16px; opacity: 0.5; }
-    .empty-state-text { font-size: 16px; font-weight: 600; }
+    .empty-state { text-align: center; padding: 60px 24px; color: var(--text-secondary); }
+    .empty-state-icon { font-size: 56px; margin-bottom: 16px; opacity: 0.6; }
+    .empty-state-text { font-size: 15px; font-weight: 500; line-height: 1.5; }
     
     /* Achievement Popup */
     .achievement-popup { 
@@ -376,24 +556,48 @@
       top: 50%; 
       left: 50%; 
       transform: translate(-50%, -50%) scale(0); 
-      background: linear-gradient(135deg, rgba(22, 33, 62, 0.98) 0%, rgba(26, 26, 46, 0.98) 100%);
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(243, 156, 18, 0.5); 
-      border-radius: 20px; 
-      padding: 40px; 
+      background: linear-gradient(180deg, rgba(22, 27, 34, 0.98) 0%, rgba(13, 17, 23, 0.98) 100%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(243, 156, 18, 0.3);
+      border-radius: 24px; 
+      padding: 36px 32px;
       text-align: center; 
       z-index: 1000; 
-      transition: transform 0.3s ease; 
-      max-width: 300px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-width: 280px;
+      width: 85%;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6), 0 0 80px rgba(243, 156, 18, 0.15);
     }
     .achievement-popup.show { transform: translate(-50%, -50%) scale(1); }
-    .achievement-icon { font-size: 72px; margin-bottom: 16px; animation: bounce 0.6s ease; }
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-    .achievement-title { font-size: 24px; font-weight: 800; color: #f39c12; margin-bottom: 8px; }
-    .achievement-text { font-size: 14px; color: #bdc3c7; font-weight: 600; }
-    .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); z-index: 999; display: none; }
-    .overlay.show { display: block; }
+    .achievement-icon { font-size: 64px; margin-bottom: 16px; animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes popIn { 
+      0% { transform: scale(0) rotate(-20deg); } 
+      60% { transform: scale(1.2) rotate(5deg); }
+      100% { transform: scale(1) rotate(0); } 
+    }
+    .achievement-title { 
+      font-size: 22px; 
+      font-weight: 800; 
+      background: linear-gradient(135deg, var(--accent-orange) 0%, #e67e22 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    .achievement-text { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .overlay { 
+      position: fixed; 
+      top: 0; left: 0; right: 0; bottom: 0; 
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 999; 
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .overlay.show { display: block; opacity: 1; }
     
     /* Confirm Dialog */
     .confirm-dialog { 
@@ -401,32 +605,241 @@
       top: 50%; 
       left: 50%; 
       transform: translate(-50%, -50%); 
-      background: linear-gradient(135deg, rgba(22, 33, 62, 0.98) 0%, rgba(26, 26, 46, 0.98) 100%);
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(231, 76, 60, 0.5); 
-      border-radius: 16px; 
-      padding: 24px; 
+      background: linear-gradient(180deg, rgba(22, 27, 34, 0.98) 0%, rgba(13, 17, 23, 0.98) 100%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+      border-radius: 20px; 
+      padding: 28px 24px;
       z-index: 1000; 
-      max-width: 320px; 
+      max-width: 300px; 
       width: 90%;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
       display: none;
     }
-    .confirm-title { font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 12px; }
-    .confirm-text { font-size: 14px; color: #bdc3c7; margin-bottom: 20px; }
-    .confirm-buttons { display: flex; gap: 10px; }
+    .confirm-title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .confirm-text { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.5; }
+    .confirm-buttons { display: flex; gap: 12px; }
     .confirm-btn { 
       flex: 1; 
-      padding: 12px; 
-      border-radius: 8px; 
+      padding: 14px; 
+      border-radius: 12px; 
       border: none; 
       font-size: 14px; 
       font-weight: 700; 
-      cursor: pointer; 
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
-    .confirm-btn.primary { background: #e74c3c; color: #ffffff; }
-    .confirm-btn.secondary { background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: #bdc3c7; }
+    .confirm-btn.primary { 
+      background: linear-gradient(135deg, var(--accent-red) 0%, #c0392b 100%);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(231, 76, 60, 0.3);
+    }
+    .confirm-btn.secondary { 
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-medium);
+      color: var(--text-secondary);
+    }
     .confirm-btn:active { transform: scale(0.95); }
+    
+    /* Smooth scrolling */
+    html { scroll-behavior: smooth; }
+    
+    /* Safe area for notched phones */
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      .workout-container, .history-section { padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
+    }
+    
+    /* ===== NEW QOL FEATURES ===== */
+    
+    /* Workout Timer Bar */
+    .workout-timer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 20px 16px 20px;
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+    .timer-left { display: flex; align-items: center; gap: 10px; }
+    .timer-icon { font-size: 20px; }
+    .timer-display { font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--text-primary); }
+    .timer-label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+    .timer-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-medium);
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .timer-btn.active {
+      background: linear-gradient(135deg, var(--accent-green) 0%, #27ae60 100%);
+      border-color: transparent;
+      color: #fff;
+    }
+    .timer-btn:active { transform: scale(0.95); }
+    
+    /* Rest Timer Overlay */
+    .rest-timer-overlay {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, rgba(13, 17, 23, 0.95) 0%, rgba(13, 17, 23, 0.98) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border-subtle);
+      padding: 20px;
+      z-index: 100;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .rest-timer-overlay.show { transform: translateY(0); }
+    .rest-timer-content { display: flex; align-items: center; justify-content: space-between; }
+    .rest-timer-left { display: flex; align-items: center; gap: 16px; }
+    .rest-timer-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent-blue) var(--progress, 0%), rgba(255,255,255,0.1) 0%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .rest-timer-circle::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      background: var(--bg-primary);
+      border-radius: 50%;
+    }
+    .rest-timer-time {
+      position: relative;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+    }
+    .rest-timer-info { display: flex; flex-direction: column; gap: 2px; }
+    .rest-timer-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+    .rest-timer-subtitle { font-size: 12px; color: var(--text-secondary); }
+    .rest-timer-skip {
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border-medium);
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .rest-timer-skip:active { transform: scale(0.95); }
+    
+    /* Quick Weight Buttons */
+    .weight-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .weight-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border-medium);
+      background: rgba(255,255,255,0.05);
+      color: var(--text-primary);
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .weight-btn:active { 
+      transform: scale(0.9);
+      background: var(--accent-orange);
+      color: #000;
+      border-color: transparent;
+    }
+    .weight-input-field {
+      flex: 1;
+      min-width: 50px;
+      max-width: 70px;
+    }
+    
+    /* Last Weight Badge */
+    .last-weight {
+      font-size: 10px;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    .last-weight span {
+      color: var(--accent-orange);
+      font-weight: 700;
+    }
+    
+    /* Streak Badge */
+    .streak-card {
+      grid-column: span 2;
+      background: linear-gradient(135deg, rgba(243, 156, 18, 0.15) 0%, rgba(231, 76, 60, 0.1) 100%);
+      border: 1px solid rgba(243, 156, 18, 0.25);
+    }
+    .streak-content { display: flex; align-items: center; justify-content: center; gap: 12px; }
+    .streak-icon { font-size: 32px; }
+    .streak-info { text-align: left; }
+    .streak-value { font-size: 28px; font-weight: 800; color: var(--accent-orange); }
+    .streak-label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    /* PR Celebration */
+    .pr-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      background: linear-gradient(135deg, rgba(243, 156, 18, 0.2) 0%, rgba(231, 76, 60, 0.15) 100%);
+      border: 1px solid rgba(243, 156, 18, 0.3);
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent-orange);
+      margin-left: 8px;
+      animation: prPulse 1s ease infinite;
+    }
+    @keyframes prPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(243, 156, 18, 0); }
+    }
+    
+    /* Confetti Animation */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: var(--accent-orange);
+      top: -10px;
+      z-index: 1001;
+      animation: confettiFall 3s ease-out forwards;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    
+    /* Stats Grid Update */
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .stats-grid .stat-card:nth-child(3) { grid-column: span 2; }
   </style>
 </head>
 <body>
@@ -435,7 +848,7 @@
     <div class="header-content">
       <div>
         <div class="header-title">8-WEEK PROGRAM</div>
-        <div class="header-subtitle">Glute & Strength Builder</div>
+        <div class="header-subtitle">Full-Body Tone • Glute Focus</div>
       </div>
       <div class="nav-tabs">
         <button class="nav-tab active" type="button" onclick="switchPage('workout')">Train</button>
@@ -451,6 +864,18 @@
       <div class="week-tabs-scroll" id="weekTabs"></div>
     </div>
     
+    <!-- Workout Timer Bar -->
+    <div class="workout-timer-bar" id="workoutTimerBar">
+      <div class="timer-left">
+        <div class="timer-icon">⏱️</div>
+        <div>
+          <div class="timer-display" id="workoutTimerDisplay">00:00</div>
+          <div class="timer-label">Workout Time</div>
+        </div>
+      </div>
+      <button class="timer-btn" id="timerToggleBtn" type="button" onclick="toggleWorkoutTimer()">Start</button>
+    </div>
+    
     <!-- Week Info Banner -->
     <div class="week-info-banner" id="weekInfo"></div>
     
@@ -461,6 +886,22 @@
     
     <!-- Workout Container -->
     <div class="workout-container" id="workoutContainer"></div>
+  </div>
+  
+  <!-- Rest Timer Overlay -->
+  <div class="rest-timer-overlay" id="restTimerOverlay">
+    <div class="rest-timer-content">
+      <div class="rest-timer-left">
+        <div class="rest-timer-circle" id="restTimerCircle">
+          <div class="rest-timer-time" id="restTimerTime">60</div>
+        </div>
+        <div class="rest-timer-info">
+          <div class="rest-timer-title">Rest Timer</div>
+          <div class="rest-timer-subtitle" id="restTimerSubtitle">Get ready for next set!</div>
+        </div>
+      </div>
+      <button class="rest-timer-skip" type="button" onclick="skipRestTimer()">Skip</button>
+    </div>
   </div>
 
   <!-- Progress Page -->
@@ -473,6 +914,15 @@
       <div class="stat-card">
         <div class="stat-value" id="currentWeek">1</div>
         <div class="stat-label">Current Week</div>
+      </div>
+      <div class="stat-card streak-card">
+        <div class="streak-content">
+          <div class="streak-icon">🔥</div>
+          <div class="streak-info">
+            <div class="streak-value" id="streakCount">0</div>
+            <div class="streak-label">Day Streak</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -519,457 +969,473 @@
     
     const workoutProgram = {
       week1: {
-        info: "Foundation (Learning & Form) - Stick to moderate weights where last 2 reps feel challenging but doable. Focus on perfect form. Rep range: 10–12 for most, 12–15 for accessories.",
+        info: "Weeks 1–2: Stay in upper rep ranges. Focus on form and control. Leave 1–2 reps 'in the tank'. Warm-up: 10 min treadmill walk. Rest: Big lifts 75–90 sec, Accessories 45–60 sec.",
         days: {
           day1: {
             name: "Day 1",
-            subtitle: "Lower (Glutes & Quads)",
+            subtitle: "Lower (Glutes + Quads)",
             exercises: [
-              { name: "Barbell Hip Thrusts", defaultWeight: 35, sets: 3, reps: "10-12" },
-              { name: "Bulgarian Split Squats", defaultWeight: 0, sets: 3, reps: "10-12" },
-              { name: "Leg Press (high/wide)", defaultWeight: 40, sets: 3, reps: "10-12" },
-              { name: "Dumbbell Step-Ups", defaultWeight: 0, sets: 3, reps: "10-12" },
-              { name: "Leg Extensions", defaultWeight: 10, sets: 3, reps: "12-15" },
-              { name: "Glute Kickbacks (cable/strap)", defaultWeight: 0, sets: 3, reps: "12-15" },
-              { name: "Walking Lunges (optional finisher)", defaultWeight: 0, sets: 2, reps: "12" }
+              { name: "Barbell Hip Thrusts (2-3 sec squeeze at top)", defaultWeight: 115, sets: 4, reps: "12" },
+              { name: "Hack Squat Machine (slow descent)", defaultWeight: 90, sets: 4, reps: "12" },
+              { name: "Smith Machine Squats", defaultWeight: 65, sets: 3, reps: "12" },
+              { name: "Step-Ups with DBs (drive through heel)", defaultWeight: 20, sets: 3, reps: "10/leg" },
+              { name: "Cable Leg Extensions (ankle strap)", defaultWeight: 15, sets: 3, reps: "15/leg" },
+              { name: "Cable/Machine Glute Kickbacks", defaultWeight: 20, sets: 3, reps: "15/leg" },
+              { name: "Seated Abduction Machine (optional)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day2: {
             name: "Day 2",
             subtitle: "Upper (Back, Shoulders, Arms)",
             exercises: [
-              { name: "Lat Pulldown", defaultWeight: 45, sets: 3, reps: "10-12" },
-              { name: "Seated Row (machine/cable)", defaultWeight: 35, sets: 3, reps: "10-12" },
-              { name: "Dumbbell Shoulder Press", defaultWeight: 12, sets: 3, reps: "10-12" },
-              { name: "Lateral Raises", defaultWeight: 5, sets: 3, reps: "12-15" },
-              { name: "Face Pulls", defaultWeight: 20, sets: 3, reps: "12-15" },
-              { name: "Bicep Curls", defaultWeight: 20, sets: 3, reps: "12-15" },
-              { name: "Overhead Tricep Extension", defaultWeight: 20, sets: 3, reps: "12-15" }
+              { name: "Lat Pulldown", defaultWeight: 70, sets: 4, reps: "12" },
+              { name: "Seated Row (machine or cable)", defaultWeight: 75, sets: 4, reps: "12" },
+              { name: "Dumbbell Shoulder Press", defaultWeight: 20, sets: 3, reps: "12" },
+              { name: "Dumbbell Lateral Raises", defaultWeight: 10, sets: 3, reps: "15" },
+              { name: "Face Pulls (rope)", defaultWeight: 35, sets: 3, reps: "15" },
+              { name: "EZ-Bar Bicep Curls", defaultWeight: 30, sets: 3, reps: "12" },
+              { name: "Rope Tricep Pushdowns", defaultWeight: 35, sets: 3, reps: "12" },
+              { name: "Finisher: 12 Lat Raise + 12 Front Raise + 12 Rev Flye (optional)", defaultWeight: 0, sets: 1, reps: "1 round" }
             ]
           },
           day3: {
             name: "Day 3",
-            subtitle: "Lower (Glutes & Hamstrings)",
+            subtitle: "Lower (Glutes + Hamstrings)",
             exercises: [
-              { name: "Romanian Deadlifts", defaultWeight: 40, sets: 3, reps: "10-12" },
-              { name: "Barbell Hip Thrusts", defaultWeight: 35, sets: 3, reps: "10-12" },
-              { name: "Walking Lunges", defaultWeight: 5, sets: 3, reps: "10-12" },
-              { name: "Hamstring Curl Machine", defaultWeight: 10, sets: 3, reps: "12-15" },
-              { name: "Cable Kickbacks", defaultWeight: 0, sets: 3, reps: "12-15" },
-              { name: "Glute Bridges (burnout)", defaultWeight: 0, sets: 2, reps: "20" }
+              { name: "Romanian Deadlifts (3-sec lower)", defaultWeight: 95, sets: 4, reps: "10" },
+              { name: "Barbell Hip Thrusts (heavier than Day 1)", defaultWeight: 125, sets: 4, reps: "10" },
+              { name: "Smith Machine Reverse Lunges", defaultWeight: 55, sets: 3, reps: "10/leg" },
+              { name: "Lying/Seated Hamstring Curl", defaultWeight: 50, sets: 3, reps: "15" },
+              { name: "Cable Pull-Throughs", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Glute Bridges (bodyweight)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day4: {
             name: "Day 4",
-            subtitle: "Full Body & Core",
+            subtitle: "Full Body + Core",
             exercises: [
-              { name: "Dumbbell Deadlifts", defaultWeight: 30, sets: 3, reps: "10-12" },
-              { name: "Goblet Squats", defaultWeight: 10, sets: 3, reps: "10-12" },
-              { name: "Arnold Press", defaultWeight: 10, sets: 3, reps: "10-12" },
-              { name: "Dumbbell Rows (single arm)", defaultWeight: 8, sets: 3, reps: "10-12" },
-              { name: "Glute-Ham Raises", defaultWeight: 0, sets: 3, reps: "8-10" },
-              { name: "Plank with Shoulder Taps", defaultWeight: 0, sets: 3, reps: "30s" },
-              { name: "Russian Twists", defaultWeight: 0, sets: 3, reps: "20" },
-              { name: "Hanging Leg Raises / Captain's Chair", defaultWeight: 0, sets: 3, reps: "12" }
+              { name: "Dumbbell Deadlift", defaultWeight: 40, sets: 3, reps: "10" },
+              { name: "Goblet Squats", defaultWeight: 40, sets: 3, reps: "12" },
+              { name: "Arnold Press", defaultWeight: 20, sets: 3, reps: "10" },
+              { name: "Single-Arm Dumbbell Rows", defaultWeight: 35, sets: 3, reps: "12/arm" },
+              { name: "Seated Leg Curl Machine", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Plank with Shoulder Taps (Core Circuit)", defaultWeight: 0, sets: 2, reps: "30 sec" },
+              { name: "Russian Twists (Core Circuit)", defaultWeight: 15, sets: 2, reps: "20 total" },
+              { name: "Hanging Knee Raises / Captain's Chair (Core Circuit)", defaultWeight: 0, sets: 2, reps: "12" },
+              { name: "Battle Ropes 30s on/20s off (optional)", defaultWeight: 0, sets: 3, reps: "30 sec" }
             ]
           }
         }
       },
       week2: {
-        info: "Foundation (Learning & Form) - Continue focusing on perfect form. Rep range: 10–12 for most, 12–15 for accessories.",
+        info: "Weeks 1–2: Same weights as Week 1. Try to hit the top end of reps cleanly. Warm-up: 10 min treadmill walk. Rest: Big lifts 75–90 sec, Accessories 45–60 sec.",
         days: {
           day1: {
             name: "Day 1",
-            subtitle: "Lower (Glutes & Quads)",
+            subtitle: "Lower (Glutes + Quads)",
             exercises: [
-              { name: "Barbell Hip Thrusts", defaultWeight: 35, sets: 3, reps: "10-12" },
-              { name: "Bulgarian Split Squats", defaultWeight: 0, sets: 3, reps: "10-12" },
-              { name: "Leg Press (high/wide)", defaultWeight: 40, sets: 3, reps: "10-12" },
-              { name: "Dumbbell Step-Ups", defaultWeight: 0, sets: 3, reps: "10-12" },
-              { name: "Leg Extensions", defaultWeight: 10, sets: 3, reps: "12-15" },
-              { name: "Glute Kickbacks (cable/strap)", defaultWeight: 0, sets: 3, reps: "12-15" },
-              { name: "Walking Lunges (optional finisher)", defaultWeight: 0, sets: 2, reps: "12" }
+              { name: "Barbell Hip Thrusts (2-3 sec squeeze at top)", defaultWeight: 115, sets: 4, reps: "12" },
+              { name: "Hack Squat Machine (slow descent)", defaultWeight: 90, sets: 4, reps: "12" },
+              { name: "Smith Machine Squats", defaultWeight: 65, sets: 3, reps: "12" },
+              { name: "Step-Ups with DBs (drive through heel)", defaultWeight: 20, sets: 3, reps: "10/leg" },
+              { name: "Cable Leg Extensions (ankle strap)", defaultWeight: 15, sets: 3, reps: "15/leg" },
+              { name: "Cable/Machine Glute Kickbacks", defaultWeight: 20, sets: 3, reps: "15/leg" },
+              { name: "Seated Abduction Machine (optional)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day2: {
             name: "Day 2",
             subtitle: "Upper (Back, Shoulders, Arms)",
             exercises: [
-              { name: "Lat Pulldown", defaultWeight: 45, sets: 3, reps: "10-12" },
-              { name: "Seated Row (machine/cable)", defaultWeight: 35, sets: 3, reps: "10-12" },
-              { name: "Dumbbell Shoulder Press", defaultWeight: 12, sets: 3, reps: "10-12" },
-              { name: "Lateral Raises", defaultWeight: 5, sets: 3, reps: "12-15" },
-              { name: "Face Pulls", defaultWeight: 20, sets: 3, reps: "12-15" },
-              { name: "Bicep Curls", defaultWeight: 20, sets: 3, reps: "12-15" },
-              { name: "Overhead Tricep Extension", defaultWeight: 20, sets: 3, reps: "12-15" }
+              { name: "Lat Pulldown", defaultWeight: 70, sets: 4, reps: "12" },
+              { name: "Seated Row (machine or cable)", defaultWeight: 75, sets: 4, reps: "12" },
+              { name: "Dumbbell Shoulder Press", defaultWeight: 20, sets: 3, reps: "12" },
+              { name: "Dumbbell Lateral Raises", defaultWeight: 10, sets: 3, reps: "15" },
+              { name: "Face Pulls (rope)", defaultWeight: 35, sets: 3, reps: "15" },
+              { name: "EZ-Bar Bicep Curls", defaultWeight: 30, sets: 3, reps: "12" },
+              { name: "Rope Tricep Pushdowns", defaultWeight: 35, sets: 3, reps: "12" },
+              { name: "Finisher: 12 Lat Raise + 12 Front Raise + 12 Rev Flye (optional)", defaultWeight: 0, sets: 1, reps: "1 round" }
             ]
           },
           day3: {
             name: "Day 3",
-            subtitle: "Lower (Glutes & Hamstrings)",
+            subtitle: "Lower (Glutes + Hamstrings)",
             exercises: [
-              { name: "Romanian Deadlifts", defaultWeight: 40, sets: 3, reps: "10-12" },
-              { name: "Barbell Hip Thrusts", defaultWeight: 35, sets: 3, reps: "10-12" },
-              { name: "Walking Lunges", defaultWeight: 5, sets: 3, reps: "10-12" },
-              { name: "Hamstring Curl Machine", defaultWeight: 10, sets: 3, reps: "12-15" },
-              { name: "Cable Kickbacks", defaultWeight: 0, sets: 3, reps: "12-15" },
-              { name: "Glute Bridges (burnout)", defaultWeight: 0, sets: 2, reps: "20" }
+              { name: "Romanian Deadlifts (3-sec lower)", defaultWeight: 95, sets: 4, reps: "10" },
+              { name: "Barbell Hip Thrusts (heavier than Day 1)", defaultWeight: 125, sets: 4, reps: "10" },
+              { name: "Smith Machine Reverse Lunges", defaultWeight: 55, sets: 3, reps: "10/leg" },
+              { name: "Lying/Seated Hamstring Curl", defaultWeight: 50, sets: 3, reps: "15" },
+              { name: "Cable Pull-Throughs", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Glute Bridges (bodyweight)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day4: {
             name: "Day 4",
-            subtitle: "Full Body & Core",
+            subtitle: "Full Body + Core",
             exercises: [
-              { name: "Dumbbell Deadlifts", defaultWeight: 30, sets: 3, reps: "10-12" },
-              { name: "Goblet Squats", defaultWeight: 10, sets: 3, reps: "10-12" },
-              { name: "Arnold Press", defaultWeight: 10, sets: 3, reps: "10-12" },
-              { name: "Dumbbell Rows (single arm)", defaultWeight: 8, sets: 3, reps: "10-12" },
-              { name: "Glute-Ham Raises", defaultWeight: 0, sets: 3, reps: "8-10" },
-              { name: "Plank with Shoulder Taps", defaultWeight: 0, sets: 3, reps: "30s" },
-              { name: "Russian Twists", defaultWeight: 0, sets: 3, reps: "20" },
-              { name: "Hanging Leg Raises / Captain's Chair", defaultWeight: 0, sets: 3, reps: "12" }
+              { name: "Dumbbell Deadlift", defaultWeight: 40, sets: 3, reps: "10" },
+              { name: "Goblet Squats", defaultWeight: 40, sets: 3, reps: "12" },
+              { name: "Arnold Press", defaultWeight: 20, sets: 3, reps: "10" },
+              { name: "Single-Arm Dumbbell Rows", defaultWeight: 35, sets: 3, reps: "12/arm" },
+              { name: "Seated Leg Curl Machine", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Plank with Shoulder Taps (Core Circuit)", defaultWeight: 0, sets: 2, reps: "30 sec" },
+              { name: "Russian Twists (Core Circuit)", defaultWeight: 15, sets: 2, reps: "20 total" },
+              { name: "Hanging Knee Raises / Captain's Chair (Core Circuit)", defaultWeight: 0, sets: 2, reps: "12" },
+              { name: "Battle Ropes 30s on/20s off (optional)", defaultWeight: 0, sets: 3, reps: "30 sec" }
             ]
           }
         }
       },
       week3: {
-        info: "Gradual Overload - Add 5 lbs (upper) or 10 lbs (lower) when you can complete all sets. Rep range: 8–10 on heavy lifts, 10–12 on accessories. Add glute burnout sets.",
+        info: "Weeks 3–4: Increase lower body lifts 5-10 lbs. Focus on control and tempo. Warm-up: 10 min treadmill walk. Rest: Big lifts 75–90 sec, Accessories 45–60 sec.",
         days: {
           day1: {
             name: "Day 1",
-            subtitle: "Lower (Glutes & Quads)",
+            subtitle: "Lower (Glutes + Quads)",
             exercises: [
-              { name: "Barbell Hip Thrusts", defaultWeight: 45, sets: 3, reps: "8-10" },
-              { name: "Bulgarian Split Squats", defaultWeight: 10, sets: 3, reps: "8-10" },
-              { name: "Leg Press (high/wide)", defaultWeight: 50, sets: 3, reps: "8-10" },
-              { name: "Dumbbell Step-Ups", defaultWeight: 10, sets: 3, reps: "10-12" },
-              { name: "Leg Extensions", defaultWeight: 20, sets: 3, reps: "10-12" },
-              { name: "Glute Kickbacks (cable/strap)", defaultWeight: 0, sets: 3, reps: "12-15" },
-              { name: "Walking Lunges (optional finisher)", defaultWeight: 10, sets: 2, reps: "12" }
+              { name: "Barbell Hip Thrusts (2-3 sec squeeze at top)", defaultWeight: 125, sets: 4, reps: "12" },
+              { name: "Hack Squat Machine (slow descent)", defaultWeight: 100, sets: 4, reps: "12" },
+              { name: "Smith Machine Squats", defaultWeight: 65, sets: 3, reps: "12" },
+              { name: "Step-Ups with DBs (drive through heel)", defaultWeight: 20, sets: 3, reps: "10/leg" },
+              { name: "Cable Leg Extensions (ankle strap)", defaultWeight: 15, sets: 3, reps: "15/leg" },
+              { name: "Cable/Machine Glute Kickbacks", defaultWeight: 20, sets: 3, reps: "15/leg" },
+              { name: "Seated Abduction Machine (optional)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day2: {
             name: "Day 2",
             subtitle: "Upper (Back, Shoulders, Arms)",
             exercises: [
-              { name: "Lat Pulldown", defaultWeight: 50, sets: 3, reps: "8-10" },
-              { name: "Seated Row (machine/cable)", defaultWeight: 40, sets: 3, reps: "8-10" },
-              { name: "Dumbbell Shoulder Press", defaultWeight: 15, sets: 3, reps: "8-10" },
-              { name: "Lateral Raises", defaultWeight: 8, sets: 3, reps: "10-12" },
-              { name: "Face Pulls", defaultWeight: 25, sets: 3, reps: "10-12" },
-              { name: "Bicep Curls", defaultWeight: 20, sets: 3, reps: "10-12" },
-              { name: "Overhead Tricep Extension", defaultWeight: 25, sets: 3, reps: "10-12" }
+              { name: "Lat Pulldown", defaultWeight: 70, sets: 4, reps: "12" },
+              { name: "Seated Row (machine or cable)", defaultWeight: 80, sets: 4, reps: "12" },
+              { name: "Dumbbell Shoulder Press", defaultWeight: 20, sets: 3, reps: "12" },
+              { name: "Dumbbell Lateral Raises", defaultWeight: 10, sets: 3, reps: "15" },
+              { name: "Face Pulls (rope)", defaultWeight: 35, sets: 3, reps: "15" },
+              { name: "EZ-Bar Bicep Curls", defaultWeight: 30, sets: 3, reps: "12" },
+              { name: "Rope Tricep Pushdowns", defaultWeight: 35, sets: 3, reps: "12" },
+              { name: "Finisher: 12 Lat Raise + 12 Front Raise + 12 Rev Flye (optional)", defaultWeight: 0, sets: 1, reps: "1 round" }
             ]
           },
           day3: {
             name: "Day 3",
-            subtitle: "Lower (Glutes & Hamstrings)",
+            subtitle: "Lower (Glutes + Hamstrings)",
             exercises: [
-              { name: "Romanian Deadlifts", defaultWeight: 50, sets: 3, reps: "8-10" },
-              { name: "Barbell Hip Thrusts", defaultWeight: 45, sets: 3, reps: "8-10" },
-              { name: "Walking Lunges", defaultWeight: 10, sets: 3, reps: "10-12" },
-              { name: "Hamstring Curl Machine", defaultWeight: 15, sets: 3, reps: "10-12" },
-              { name: "Cable Kickbacks", defaultWeight: 0, sets: 3, reps: "12-15" },
-              { name: "Glute Bridges (burnout)", defaultWeight: 0, sets: 2, reps: "20" }
+              { name: "Romanian Deadlifts (3-sec lower)", defaultWeight: 105, sets: 4, reps: "10" },
+              { name: "Barbell Hip Thrusts (heavier than Day 1)", defaultWeight: 135, sets: 4, reps: "10" },
+              { name: "Smith Machine Reverse Lunges", defaultWeight: 55, sets: 3, reps: "10/leg" },
+              { name: "Lying/Seated Hamstring Curl", defaultWeight: 50, sets: 3, reps: "15" },
+              { name: "Cable Pull-Throughs", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Glute Bridges (bodyweight)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day4: {
             name: "Day 4",
-            subtitle: "Full Body & Core",
+            subtitle: "Full Body + Core",
             exercises: [
-              { name: "Dumbbell Deadlifts", defaultWeight: 40, sets: 3, reps: "8-10" },
-              { name: "Goblet Squats", defaultWeight: 20, sets: 3, reps: "8-10" },
-              { name: "Arnold Press", defaultWeight: 15, sets: 3, reps: "8-10" },
-              { name: "Dumbbell Rows (single arm)", defaultWeight: 10, sets: 3, reps: "8-10" },
-              { name: "Glute-Ham Raises", defaultWeight: 5, sets: 3, reps: "8-10" },
-              { name: "Plank with Shoulder Taps", defaultWeight: 0, sets: 3, reps: "45s" },
-              { name: "Russian Twists", defaultWeight: 0, sets: 3, reps: "25" },
-              { name: "Hanging Leg Raises / Captain's Chair", defaultWeight: 0, sets: 3, reps: "15" }
+              { name: "Dumbbell Deadlift", defaultWeight: 40, sets: 3, reps: "10" },
+              { name: "Goblet Squats", defaultWeight: 40, sets: 3, reps: "12" },
+              { name: "Arnold Press", defaultWeight: 20, sets: 3, reps: "10" },
+              { name: "Single-Arm Dumbbell Rows", defaultWeight: 35, sets: 3, reps: "12/arm" },
+              { name: "Seated Leg Curl Machine", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Plank with Shoulder Taps (Core Circuit)", defaultWeight: 0, sets: 2, reps: "30 sec" },
+              { name: "Russian Twists (Core Circuit)", defaultWeight: 15, sets: 2, reps: "20 total" },
+              { name: "Hanging Knee Raises / Captain's Chair (Core Circuit)", defaultWeight: 0, sets: 2, reps: "12" },
+              { name: "Battle Ropes 30s on/20s off (optional)", defaultWeight: 0, sets: 3, reps: "30 sec" }
             ]
           }
         }
       },
       week4: {
-        info: "Gradual Overload - Continue progressive overload. Rep range: 8–10 on heavy lifts, 10–12 on accessories.",
+        info: "Weeks 3–4: Same weights as Week 3. Focus on control and tempo. Warm-up: 10 min treadmill walk. Rest: Big lifts 75–90 sec, Accessories 45–60 sec.",
         days: {
           day1: {
             name: "Day 1",
-            subtitle: "Lower (Glutes & Quads)",
+            subtitle: "Lower (Glutes + Quads)",
             exercises: [
-              { name: "Barbell Hip Thrusts", defaultWeight: 45, sets: 3, reps: "8-10" },
-              { name: "Bulgarian Split Squats", defaultWeight: 10, sets: 3, reps: "8-10" },
-              { name: "Leg Press (high/wide)", defaultWeight: 50, sets: 3, reps: "8-10" },
-              { name: "Dumbbell Step-Ups", defaultWeight: 10, sets: 3, reps: "10-12" },
-              { name: "Leg Extensions", defaultWeight: 20, sets: 3, reps: "10-12" },
-              { name: "Glute Kickbacks (cable/strap)", defaultWeight: 0, sets: 3, reps: "12-15" },
-              { name: "Walking Lunges (optional finisher)", defaultWeight: 10, sets: 2, reps: "12" }
+              { name: "Barbell Hip Thrusts (2-3 sec squeeze at top)", defaultWeight: 125, sets: 4, reps: "12" },
+              { name: "Hack Squat Machine (slow descent)", defaultWeight: 100, sets: 4, reps: "12" },
+              { name: "Smith Machine Squats", defaultWeight: 65, sets: 3, reps: "12" },
+              { name: "Step-Ups with DBs (drive through heel)", defaultWeight: 20, sets: 3, reps: "10/leg" },
+              { name: "Cable Leg Extensions (ankle strap)", defaultWeight: 15, sets: 3, reps: "15/leg" },
+              { name: "Cable/Machine Glute Kickbacks", defaultWeight: 20, sets: 3, reps: "15/leg" },
+              { name: "Seated Abduction Machine (optional)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day2: {
             name: "Day 2",
             subtitle: "Upper (Back, Shoulders, Arms)",
             exercises: [
-              { name: "Lat Pulldown", defaultWeight: 50, sets: 3, reps: "8-10" },
-              { name: "Seated Row (machine/cable)", defaultWeight: 40, sets: 3, reps: "8-10" },
-              { name: "Dumbbell Shoulder Press", defaultWeight: 15, sets: 3, reps: "8-10" },
-              { name: "Lateral Raises", defaultWeight: 8, sets: 3, reps: "10-12" },
-              { name: "Face Pulls", defaultWeight: 25, sets: 3, reps: "10-12" },
-              { name: "Bicep Curls", defaultWeight: 20, sets: 3, reps: "10-12" },
-              { name: "Overhead Tricep Extension", defaultWeight: 25, sets: 3, reps: "10-12" }
+              { name: "Lat Pulldown", defaultWeight: 70, sets: 4, reps: "12" },
+              { name: "Seated Row (machine or cable)", defaultWeight: 80, sets: 4, reps: "12" },
+              { name: "Dumbbell Shoulder Press", defaultWeight: 20, sets: 3, reps: "12" },
+              { name: "Dumbbell Lateral Raises", defaultWeight: 10, sets: 3, reps: "15" },
+              { name: "Face Pulls (rope)", defaultWeight: 35, sets: 3, reps: "15" },
+              { name: "EZ-Bar Bicep Curls", defaultWeight: 30, sets: 3, reps: "12" },
+              { name: "Rope Tricep Pushdowns", defaultWeight: 35, sets: 3, reps: "12" },
+              { name: "Finisher: 12 Lat Raise + 12 Front Raise + 12 Rev Flye (optional)", defaultWeight: 0, sets: 1, reps: "1 round" }
             ]
           },
           day3: {
             name: "Day 3",
-            subtitle: "Lower (Glutes & Hamstrings)",
+            subtitle: "Lower (Glutes + Hamstrings)",
             exercises: [
-              { name: "Romanian Deadlifts", defaultWeight: 50, sets: 3, reps: "8-10" },
-              { name: "Barbell Hip Thrusts", defaultWeight: 45, sets: 3, reps: "8-10" },
-              { name: "Walking Lunges", defaultWeight: 10, sets: 3, reps: "10-12" },
-              { name: "Hamstring Curl Machine", defaultWeight: 15, sets: 3, reps: "10-12" },
-              { name: "Cable Kickbacks", defaultWeight: 0, sets: 3, reps: "12-15" },
-              { name: "Glute Bridges (burnout)", defaultWeight: 0, sets: 2, reps: "20" }
+              { name: "Romanian Deadlifts (3-sec lower)", defaultWeight: 105, sets: 4, reps: "10" },
+              { name: "Barbell Hip Thrusts (heavier than Day 1)", defaultWeight: 135, sets: 4, reps: "10" },
+              { name: "Smith Machine Reverse Lunges", defaultWeight: 55, sets: 3, reps: "10/leg" },
+              { name: "Lying/Seated Hamstring Curl", defaultWeight: 50, sets: 3, reps: "15" },
+              { name: "Cable Pull-Throughs", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Glute Bridges (bodyweight)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day4: {
             name: "Day 4",
-            subtitle: "Full Body & Core",
+            subtitle: "Full Body + Core",
             exercises: [
-              { name: "Dumbbell Deadlifts", defaultWeight: 40, sets: 3, reps: "8-10" },
-              { name: "Goblet Squats", defaultWeight: 20, sets: 3, reps: "8-10" },
-              { name: "Arnold Press", defaultWeight: 15, sets: 3, reps: "8-10" },
-              { name: "Dumbbell Rows (single arm)", defaultWeight: 10, sets: 3, reps: "8-10" },
-              { name: "Glute-Ham Raises", defaultWeight: 5, sets: 3, reps: "8-10" },
-              { name: "Plank with Shoulder Taps", defaultWeight: 0, sets: 3, reps: "45s" },
-              { name: "Russian Twists", defaultWeight: 0, sets: 3, reps: "25" },
-              { name: "Hanging Leg Raises / Captain's Chair", defaultWeight: 0, sets: 3, reps: "15" }
+              { name: "Dumbbell Deadlift", defaultWeight: 40, sets: 3, reps: "10" },
+              { name: "Goblet Squats", defaultWeight: 40, sets: 3, reps: "12" },
+              { name: "Arnold Press", defaultWeight: 20, sets: 3, reps: "10" },
+              { name: "Single-Arm Dumbbell Rows", defaultWeight: 35, sets: 3, reps: "12/arm" },
+              { name: "Seated Leg Curl Machine", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Plank with Shoulder Taps (Core Circuit)", defaultWeight: 0, sets: 2, reps: "30 sec" },
+              { name: "Russian Twists (Core Circuit)", defaultWeight: 15, sets: 2, reps: "20 total" },
+              { name: "Hanging Knee Raises / Captain's Chair (Core Circuit)", defaultWeight: 0, sets: 2, reps: "12" },
+              { name: "Battle Ropes 30s on/20s off (optional)", defaultWeight: 0, sets: 3, reps: "30 sec" }
             ]
           }
         }
       },
       week5: {
-        info: "Push the Challenge - Increase weights (5-10 lbs). Work closer to 8 reps on big lifts. Add extra set (4 instead of 3) on hip thrusts & RDLs. Rest 90 sec between heavy lifts.",
+        info: "Weeks 5–6: Heavier phase! Drop to 8-10 reps on big lifts, increase weight. Add 1 extra set to hip thrusts. Warm-up: 10 min treadmill walk.",
         days: {
           day1: {
             name: "Day 1",
-            subtitle: "Lower (Glutes & Quads)",
+            subtitle: "Lower (Glutes + Quads)",
             exercises: [
-              { name: "Barbell Hip Thrusts", defaultWeight: 55, sets: 4, reps: "8" },
-              { name: "Bulgarian Split Squats", defaultWeight: 15, sets: 3, reps: "8" },
-              { name: "Leg Press (high/wide)", defaultWeight: 60, sets: 3, reps: "8" },
-              { name: "Dumbbell Step-Ups", defaultWeight: 20, sets: 3, reps: "8-10" },
-              { name: "Leg Extensions", defaultWeight: 25, sets: 3, reps: "10-12" },
-              { name: "Glute Kickbacks (cable/strap)", defaultWeight: 0, sets: 3, reps: "12-15" },
-              { name: "Walking Lunges (optional finisher)", defaultWeight: 20, sets: 2, reps: "12" }
+              { name: "Barbell Hip Thrusts (2-3 sec squeeze at top)", defaultWeight: 135, sets: 4, reps: "10" },
+              { name: "Hack Squat Machine (slow descent)", defaultWeight: 110, sets: 4, reps: "10" },
+              { name: "Smith Machine Squats", defaultWeight: 75, sets: 3, reps: "10" },
+              { name: "Step-Ups with DBs (drive through heel)", defaultWeight: 20, sets: 3, reps: "10/leg" },
+              { name: "Cable Leg Extensions (ankle strap)", defaultWeight: 15, sets: 3, reps: "15/leg" },
+              { name: "Cable/Machine Glute Kickbacks", defaultWeight: 20, sets: 3, reps: "15/leg" },
+              { name: "Seated Abduction Machine (optional)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day2: {
             name: "Day 2",
             subtitle: "Upper (Back, Shoulders, Arms)",
             exercises: [
-              { name: "Lat Pulldown", defaultWeight: 55, sets: 3, reps: "8" },
-              { name: "Seated Row (machine/cable)", defaultWeight: 45, sets: 3, reps: "8" },
-              { name: "Dumbbell Shoulder Press", defaultWeight: 15, sets: 3, reps: "8" },
-              { name: "Lateral Raises", defaultWeight: 10, sets: 3, reps: "12-15" },
-              { name: "Face Pulls", defaultWeight: 30, sets: 3, reps: "12-15" },
-              { name: "Bicep Curls", defaultWeight: 25, sets: 3, reps: "12-15" },
-              { name: "Overhead Tricep Extension", defaultWeight: 30, sets: 3, reps: "12-15" }
+              { name: "Lat Pulldown", defaultWeight: 70, sets: 4, reps: "10" },
+              { name: "Seated Row (machine or cable)", defaultWeight: 85, sets: 4, reps: "10" },
+              { name: "Dumbbell Shoulder Press", defaultWeight: 20, sets: 3, reps: "10" },
+              { name: "Dumbbell Lateral Raises", defaultWeight: 10, sets: 3, reps: "15" },
+              { name: "Face Pulls (rope)", defaultWeight: 35, sets: 3, reps: "15" },
+              { name: "EZ-Bar Bicep Curls", defaultWeight: 30, sets: 3, reps: "12" },
+              { name: "Rope Tricep Pushdowns", defaultWeight: 35, sets: 3, reps: "12" },
+              { name: "Finisher: 12 Lat Raise + 12 Front Raise + 12 Rev Flye (optional)", defaultWeight: 0, sets: 1, reps: "1 round" }
             ]
           },
           day3: {
             name: "Day 3",
-            subtitle: "Lower (Glutes & Hamstrings)",
+            subtitle: "Lower (Glutes + Hamstrings)",
             exercises: [
-              { name: "Romanian Deadlifts", defaultWeight: 60, sets: 4, reps: "8" },
-              { name: "Barbell Hip Thrusts", defaultWeight: 55, sets: 4, reps: "8" },
-              { name: "Walking Lunges", defaultWeight: 20, sets: 3, reps: "10-12" },
-              { name: "Hamstring Curl Machine", defaultWeight: 20, sets: 3, reps: "10-12" },
-              { name: "Cable Kickbacks", defaultWeight: 0, sets: 3, reps: "12-15" },
-              { name: "Glute Bridges (burnout)", defaultWeight: 0, sets: 2, reps: "25" }
+              { name: "Romanian Deadlifts (3-sec lower)", defaultWeight: 115, sets: 4, reps: "8-10" },
+              { name: "Barbell Hip Thrusts (heavier than Day 1)", defaultWeight: 145, sets: 4, reps: "10" },
+              { name: "Smith Machine Reverse Lunges", defaultWeight: 55, sets: 3, reps: "10/leg" },
+              { name: "Lying/Seated Hamstring Curl", defaultWeight: 50, sets: 3, reps: "15" },
+              { name: "Cable Pull-Throughs", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Glute Bridges (bodyweight)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day4: {
             name: "Day 4",
-            subtitle: "Full Body & Core",
+            subtitle: "Full Body + Core",
             exercises: [
-              { name: "Dumbbell Deadlifts", defaultWeight: 50, sets: 3, reps: "8" },
-              { name: "Goblet Squats", defaultWeight: 30, sets: 3, reps: "8" },
-              { name: "Arnold Press", defaultWeight: 20, sets: 3, reps: "8" },
-              { name: "Dumbbell Rows (single arm)", defaultWeight: 12, sets: 3, reps: "8" },
-              { name: "Glute-Ham Raises", defaultWeight: 15, sets: 3, reps: "8-10" },
-              { name: "Plank with Shoulder Taps", defaultWeight: 0, sets: 3, reps: "60s" },
-              { name: "Russian Twists", defaultWeight: 0, sets: 3, reps: "30" },
-              { name: "Hanging Leg Raises / Captain's Chair", defaultWeight: 0, sets: 3, reps: "15" }
+              { name: "Dumbbell Deadlift", defaultWeight: 40, sets: 3, reps: "10" },
+              { name: "Goblet Squats", defaultWeight: 40, sets: 3, reps: "12" },
+              { name: "Arnold Press", defaultWeight: 20, sets: 3, reps: "10" },
+              { name: "Single-Arm Dumbbell Rows", defaultWeight: 35, sets: 3, reps: "12/arm" },
+              { name: "Seated Leg Curl Machine", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Plank with Shoulder Taps (Core Circuit)", defaultWeight: 0, sets: 2, reps: "30 sec" },
+              { name: "Russian Twists (Core Circuit)", defaultWeight: 15, sets: 2, reps: "20 total" },
+              { name: "Hanging Knee Raises / Captain's Chair (Core Circuit)", defaultWeight: 0, sets: 2, reps: "12" },
+              { name: "Battle Ropes 30s on/20s off (optional)", defaultWeight: 0, sets: 3, reps: "30 sec" }
             ]
           }
         }
       },
       week6: {
-        info: "Push the Challenge - Continue heavy lifting with 4 sets on primary exercises. Rep range: 8 for big lifts, 12-15+ for accessories.",
+        info: "Weeks 5–6: Same as Week 5. Add 1 extra set to hip thrusts on both lower days (5 sets total). Warm-up: 10 min treadmill walk.",
         days: {
           day1: {
             name: "Day 1",
-            subtitle: "Lower (Glutes & Quads)",
+            subtitle: "Lower (Glutes + Quads)",
             exercises: [
-              { name: "Barbell Hip Thrusts", defaultWeight: 55, sets: 4, reps: "8" },
-              { name: "Bulgarian Split Squats", defaultWeight: 15, sets: 3, reps: "8" },
-              { name: "Leg Press (high/wide)", defaultWeight: 60, sets: 3, reps: "8" },
-              { name: "Dumbbell Step-Ups", defaultWeight: 20, sets: 3, reps: "8-10" },
-              { name: "Leg Extensions", defaultWeight: 25, sets: 3, reps: "10-12" },
-              { name: "Glute Kickbacks (cable/strap)", defaultWeight: 0, sets: 3, reps: "12-15" },
-              { name: "Walking Lunges (optional finisher)", defaultWeight: 20, sets: 2, reps: "12" }
+              { name: "Barbell Hip Thrusts (2-3 sec squeeze at top)", defaultWeight: 135, sets: 5, reps: "10" },
+              { name: "Hack Squat Machine (slow descent)", defaultWeight: 110, sets: 4, reps: "10" },
+              { name: "Smith Machine Squats", defaultWeight: 75, sets: 3, reps: "10" },
+              { name: "Step-Ups with DBs (drive through heel)", defaultWeight: 20, sets: 3, reps: "10/leg" },
+              { name: "Cable Leg Extensions (ankle strap)", defaultWeight: 15, sets: 3, reps: "15/leg" },
+              { name: "Cable/Machine Glute Kickbacks", defaultWeight: 20, sets: 3, reps: "15/leg" },
+              { name: "Seated Abduction Machine (optional)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day2: {
             name: "Day 2",
             subtitle: "Upper (Back, Shoulders, Arms)",
             exercises: [
-              { name: "Lat Pulldown", defaultWeight: 55, sets: 3, reps: "8" },
-              { name: "Seated Row (machine/cable)", defaultWeight: 45, sets: 3, reps: "8" },
-              { name: "Dumbbell Shoulder Press", defaultWeight: 15, sets: 3, reps: "8" },
-              { name: "Lateral Raises", defaultWeight: 10, sets: 3, reps: "12-15" },
-              { name: "Face Pulls", defaultWeight: 30, sets: 3, reps: "12-15" },
-              { name: "Bicep Curls", defaultWeight: 25, sets: 3, reps: "12-15" },
-              { name: "Overhead Tricep Extension", defaultWeight: 30, sets: 3, reps: "12-15" }
+              { name: "Lat Pulldown", defaultWeight: 70, sets: 4, reps: "10" },
+              { name: "Seated Row (machine or cable)", defaultWeight: 85, sets: 4, reps: "10" },
+              { name: "Dumbbell Shoulder Press", defaultWeight: 20, sets: 3, reps: "10" },
+              { name: "Dumbbell Lateral Raises", defaultWeight: 10, sets: 3, reps: "15" },
+              { name: "Face Pulls (rope)", defaultWeight: 35, sets: 3, reps: "15" },
+              { name: "EZ-Bar Bicep Curls", defaultWeight: 30, sets: 3, reps: "12" },
+              { name: "Rope Tricep Pushdowns", defaultWeight: 35, sets: 3, reps: "12" },
+              { name: "Finisher: 12 Lat Raise + 12 Front Raise + 12 Rev Flye (optional)", defaultWeight: 0, sets: 1, reps: "1 round" }
             ]
           },
           day3: {
             name: "Day 3",
-            subtitle: "Lower (Glutes & Hamstrings)",
+            subtitle: "Lower (Glutes + Hamstrings)",
             exercises: [
-              { name: "Romanian Deadlifts", defaultWeight: 60, sets: 4, reps: "8" },
-              { name: "Barbell Hip Thrusts", defaultWeight: 55, sets: 4, reps: "8" },
-              { name: "Walking Lunges", defaultWeight: 20, sets: 3, reps: "10-12" },
-              { name: "Hamstring Curl Machine", defaultWeight: 20, sets: 3, reps: "10-12" },
-              { name: "Cable Kickbacks", defaultWeight: 0, sets: 3, reps: "12-15" },
-              { name: "Glute Bridges (burnout)", defaultWeight: 0, sets: 2, reps: "25" }
+              { name: "Romanian Deadlifts (3-sec lower)", defaultWeight: 115, sets: 4, reps: "8-10" },
+              { name: "Barbell Hip Thrusts (heavier than Day 1)", defaultWeight: 145, sets: 5, reps: "10" },
+              { name: "Smith Machine Reverse Lunges", defaultWeight: 55, sets: 3, reps: "10/leg" },
+              { name: "Lying/Seated Hamstring Curl", defaultWeight: 50, sets: 3, reps: "15" },
+              { name: "Cable Pull-Throughs", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Glute Bridges (bodyweight)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day4: {
             name: "Day 4",
-            subtitle: "Full Body & Core",
+            subtitle: "Full Body + Core",
             exercises: [
-              { name: "Dumbbell Deadlifts", defaultWeight: 50, sets: 3, reps: "8" },
-              { name: "Goblet Squats", defaultWeight: 30, sets: 3, reps: "8" },
-              { name: "Arnold Press", defaultWeight: 20, sets: 3, reps: "8" },
-              { name: "Dumbbell Rows (single arm)", defaultWeight: 12, sets: 3, reps: "8" },
-              { name: "Glute-Ham Raises", defaultWeight: 15, sets: 3, reps: "8-10" },
-              { name: "Plank with Shoulder Taps", defaultWeight: 0, sets: 3, reps: "60s" },
-              { name: "Russian Twists", defaultWeight: 0, sets: 3, reps: "30" },
-              { name: "Hanging Leg Raises / Captain's Chair", defaultWeight: 0, sets: 3, reps: "15" }
+              { name: "Dumbbell Deadlift", defaultWeight: 40, sets: 3, reps: "10" },
+              { name: "Goblet Squats", defaultWeight: 40, sets: 3, reps: "12" },
+              { name: "Arnold Press", defaultWeight: 20, sets: 3, reps: "10" },
+              { name: "Single-Arm Dumbbell Rows", defaultWeight: 35, sets: 3, reps: "12/arm" },
+              { name: "Seated Leg Curl Machine", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Plank with Shoulder Taps (Core Circuit)", defaultWeight: 0, sets: 2, reps: "30 sec" },
+              { name: "Russian Twists (Core Circuit)", defaultWeight: 15, sets: 2, reps: "20 total" },
+              { name: "Hanging Knee Raises / Captain's Chair (Core Circuit)", defaultWeight: 0, sets: 2, reps: "12" },
+              { name: "Battle Ropes 30s on/20s off (optional)", defaultWeight: 0, sets: 3, reps: "30 sec" }
             ]
           }
         }
       },
       week7: {
-        info: "Intensity & Mind-Muscle Focus - Heaviest weights yet! Try tempo training: Hip thrusts (3s up, 3s hold), RDLs (3s down, explode up). Superset accessories. Rep range: 8-12 big lifts, 12-15+ accessories.",
+        info: "Weeks 7–8: Final push! Go for PRs on hip thrusts, RDLs, rows. Emphasize tempo (slow lowering, strong squeeze). Clean reps, full control!",
         days: {
           day1: {
             name: "Day 1",
-            subtitle: "Lower (Glutes & Quads)",
+            subtitle: "Lower (Glutes + Quads)",
             exercises: [
-              { name: "Barbell Hip Thrusts", defaultWeight: 55, sets: 4, reps: "8-12" },
-              { name: "Bulgarian Split Squats", defaultWeight: 15, sets: 3, reps: "8-12" },
-              { name: "Leg Press (high/wide)", defaultWeight: 60, sets: 3, reps: "8-12" },
-              { name: "Dumbbell Step-Ups", defaultWeight: 20, sets: 3, reps: "10-12" },
-              { name: "Leg Extensions", defaultWeight: 25, sets: 3, reps: "12-15" },
-              { name: "Glute Kickbacks (cable/strap)", defaultWeight: 0, sets: 3, reps: "15" },
-              { name: "Walking Lunges (optional finisher)", defaultWeight: 20, sets: 2, reps: "15" }
+              { name: "Barbell Hip Thrusts (2-3 sec squeeze at top)", defaultWeight: 145, sets: 5, reps: "10" },
+              { name: "Hack Squat Machine (slow descent)", defaultWeight: 120, sets: 4, reps: "10" },
+              { name: "Smith Machine Squats", defaultWeight: 75, sets: 3, reps: "10" },
+              { name: "Step-Ups with DBs (drive through heel)", defaultWeight: 20, sets: 3, reps: "10/leg" },
+              { name: "Cable Leg Extensions (ankle strap)", defaultWeight: 15, sets: 3, reps: "15/leg" },
+              { name: "Cable/Machine Glute Kickbacks", defaultWeight: 20, sets: 3, reps: "15/leg" },
+              { name: "Seated Abduction Machine (optional)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day2: {
             name: "Day 2",
             subtitle: "Upper (Back, Shoulders, Arms)",
             exercises: [
-              { name: "Lat Pulldown", defaultWeight: 55, sets: 3, reps: "8-12" },
-              { name: "Seated Row (machine/cable)", defaultWeight: 45, sets: 3, reps: "8-12" },
-              { name: "Dumbbell Shoulder Press", defaultWeight: 15, sets: 3, reps: "8-12" },
-              { name: "Lateral Raises", defaultWeight: 10, sets: 3, reps: "12-15" },
-              { name: "Face Pulls", defaultWeight: 30, sets: 3, reps: "12-15" },
-              { name: "Bicep Curls", defaultWeight: 25, sets: 3, reps: "12-15" },
-              { name: "Overhead Tricep Extension", defaultWeight: 30, sets: 3, reps: "12-15" }
+              { name: "Lat Pulldown", defaultWeight: 75, sets: 4, reps: "10" },
+              { name: "Seated Row (machine or cable)", defaultWeight: 85, sets: 4, reps: "10" },
+              { name: "Dumbbell Shoulder Press", defaultWeight: 20, sets: 3, reps: "10" },
+              { name: "Dumbbell Lateral Raises", defaultWeight: 10, sets: 3, reps: "15" },
+              { name: "Face Pulls (rope)", defaultWeight: 35, sets: 3, reps: "15" },
+              { name: "EZ-Bar Bicep Curls", defaultWeight: 30, sets: 3, reps: "12" },
+              { name: "Rope Tricep Pushdowns", defaultWeight: 35, sets: 3, reps: "12" },
+              { name: "Finisher: 12 Lat Raise + 12 Front Raise + 12 Rev Flye (optional)", defaultWeight: 0, sets: 1, reps: "1 round" }
             ]
           },
           day3: {
             name: "Day 3",
-            subtitle: "Lower (Glutes & Hamstrings)",
+            subtitle: "Lower (Glutes + Hamstrings)",
             exercises: [
-              { name: "Romanian Deadlifts", defaultWeight: 60, sets: 4, reps: "8-12" },
-              { name: "Barbell Hip Thrusts", defaultWeight: 55, sets: 4, reps: "8-12" },
-              { name: "Walking Lunges", defaultWeight: 20, sets: 3, reps: "10-12" },
-              { name: "Hamstring Curl Machine", defaultWeight: 20, sets: 3, reps: "12-15" },
-              { name: "Cable Kickbacks", defaultWeight: 0, sets: 3, reps: "15" },
-              { name: "Glute Bridges (burnout)", defaultWeight: 0, sets: 2, reps: "30" }
+              { name: "Romanian Deadlifts (3-sec lower, PR attempt!)", defaultWeight: 120, sets: 4, reps: "8-10" },
+              { name: "Barbell Hip Thrusts (PR attempt!)", defaultWeight: 155, sets: 5, reps: "10" },
+              { name: "Smith Machine Reverse Lunges", defaultWeight: 55, sets: 3, reps: "10/leg" },
+              { name: "Lying/Seated Hamstring Curl", defaultWeight: 50, sets: 3, reps: "15" },
+              { name: "Cable Pull-Throughs", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Glute Bridges (bodyweight)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day4: {
             name: "Day 4",
-            subtitle: "Full Body & Core",
+            subtitle: "Full Body + Core",
             exercises: [
-              { name: "Dumbbell Deadlifts", defaultWeight: 50, sets: 3, reps: "8-12" },
-              { name: "Goblet Squats", defaultWeight: 30, sets: 3, reps: "8-12" },
-              { name: "Arnold Press", defaultWeight: 20, sets: 3, reps: "8-12" },
-              { name: "Dumbbell Rows (single arm)", defaultWeight: 12, sets: 3, reps: "8-12" },
-              { name: "Glute-Ham Raises", defaultWeight: 15, sets: 3, reps: "10-12" },
-              { name: "Plank with Shoulder Taps", defaultWeight: 0, sets: 3, reps: "60s" },
-              { name: "Russian Twists", defaultWeight: 0, sets: 3, reps: "35" },
-              { name: "Hanging Leg Raises / Captain's Chair", defaultWeight: 0, sets: 3, reps: "20" }
+              { name: "Dumbbell Deadlift", defaultWeight: 40, sets: 3, reps: "10" },
+              { name: "Goblet Squats", defaultWeight: 40, sets: 3, reps: "12" },
+              { name: "Arnold Press", defaultWeight: 20, sets: 3, reps: "10" },
+              { name: "Single-Arm Dumbbell Rows", defaultWeight: 35, sets: 3, reps: "12/arm" },
+              { name: "Seated Leg Curl Machine", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Plank with Shoulder Taps (Core Circuit)", defaultWeight: 0, sets: 2, reps: "30 sec" },
+              { name: "Russian Twists (Core Circuit)", defaultWeight: 15, sets: 2, reps: "20 total" },
+              { name: "Hanging Knee Raises / Captain's Chair (Core Circuit)", defaultWeight: 0, sets: 2, reps: "12" },
+              { name: "Battle Ropes 30s on/20s off (optional)", defaultWeight: 0, sets: 3, reps: "30 sec" }
             ]
           }
         }
       },
       week8: {
-        info: "Intensity & Mind-Muscle Focus - Final week! Push your limits safely. Tempo training continues. Rep range: 8-12 big lifts, 12-15+ accessories. Finish strong!",
+        info: "FINAL WEEK! 🔥 Repeat Week 7 weights. Aim for clean reps, full control, no failure. If feeling great, try +5 lb on hip thrusts only!",
         days: {
           day1: {
             name: "Day 1",
-            subtitle: "Lower (Glutes & Quads)",
+            subtitle: "Lower (Glutes + Quads)",
             exercises: [
-              { name: "Barbell Hip Thrusts", defaultWeight: 55, sets: 4, reps: "8-12" },
-              { name: "Bulgarian Split Squats", defaultWeight: 15, sets: 3, reps: "8-12" },
-              { name: "Leg Press (high/wide)", defaultWeight: 60, sets: 3, reps: "8-12" },
-              { name: "Dumbbell Step-Ups", defaultWeight: 20, sets: 3, reps: "10-12" },
-              { name: "Leg Extensions", defaultWeight: 25, sets: 3, reps: "12-15" },
-              { name: "Glute Kickbacks (cable/strap)", defaultWeight: 0, sets: 3, reps: "15" },
-              { name: "Walking Lunges (optional finisher)", defaultWeight: 20, sets: 2, reps: "15" }
+              { name: "Barbell Hip Thrusts (PR attempt! +5 if strong)", defaultWeight: 145, sets: 5, reps: "10" },
+              { name: "Hack Squat Machine (slow descent)", defaultWeight: 120, sets: 4, reps: "10" },
+              { name: "Smith Machine Squats", defaultWeight: 75, sets: 3, reps: "10" },
+              { name: "Step-Ups with DBs (drive through heel)", defaultWeight: 20, sets: 3, reps: "10/leg" },
+              { name: "Cable Leg Extensions (ankle strap)", defaultWeight: 15, sets: 3, reps: "15/leg" },
+              { name: "Cable/Machine Glute Kickbacks", defaultWeight: 20, sets: 3, reps: "15/leg" },
+              { name: "Seated Abduction Machine (optional)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day2: {
             name: "Day 2",
             subtitle: "Upper (Back, Shoulders, Arms)",
             exercises: [
-              { name: "Lat Pulldown", defaultWeight: 55, sets: 3, reps: "8-12" },
-              { name: "Seated Row (machine/cable)", defaultWeight: 45, sets: 3, reps: "8-12" },
-              { name: "Dumbbell Shoulder Press", defaultWeight: 15, sets: 3, reps: "8-12" },
-              { name: "Lateral Raises", defaultWeight: 10, sets: 3, reps: "12-15" },
-              { name: "Face Pulls", defaultWeight: 30, sets: 3, reps: "12-15" },
-              { name: "Bicep Curls", defaultWeight: 25, sets: 3, reps: "12-15" },
-              { name: "Overhead Tricep Extension", defaultWeight: 30, sets: 3, reps: "12-15" }
+              { name: "Lat Pulldown", defaultWeight: 75, sets: 4, reps: "10" },
+              { name: "Seated Row (machine or cable)", defaultWeight: 85, sets: 4, reps: "10" },
+              { name: "Dumbbell Shoulder Press", defaultWeight: 20, sets: 3, reps: "10" },
+              { name: "Dumbbell Lateral Raises", defaultWeight: 10, sets: 3, reps: "15" },
+              { name: "Face Pulls (rope)", defaultWeight: 35, sets: 3, reps: "15" },
+              { name: "EZ-Bar Bicep Curls", defaultWeight: 30, sets: 3, reps: "12" },
+              { name: "Rope Tricep Pushdowns", defaultWeight: 35, sets: 3, reps: "12" },
+              { name: "Finisher: 12 Lat Raise + 12 Front Raise + 12 Rev Flye (optional)", defaultWeight: 0, sets: 1, reps: "1 round" }
             ]
           },
           day3: {
             name: "Day 3",
-            subtitle: "Lower (Glutes & Hamstrings)",
+            subtitle: "Lower (Glutes + Hamstrings)",
             exercises: [
-              { name: "Romanian Deadlifts", defaultWeight: 60, sets: 4, reps: "8-12" },
-              { name: "Barbell Hip Thrusts", defaultWeight: 55, sets: 4, reps: "8-12" },
-              { name: "Walking Lunges", defaultWeight: 20, sets: 3, reps: "10-12" },
-              { name: "Hamstring Curl Machine", defaultWeight: 20, sets: 3, reps: "12-15" },
-              { name: "Cable Kickbacks", defaultWeight: 0, sets: 3, reps: "15" },
-              { name: "Glute Bridges (burnout)", defaultWeight: 0, sets: 2, reps: "30" }
+              { name: "Romanian Deadlifts (3-sec lower, finish strong!)", defaultWeight: 120, sets: 4, reps: "8-10" },
+              { name: "Barbell Hip Thrusts (PR attempt! +5 if strong)", defaultWeight: 155, sets: 5, reps: "10" },
+              { name: "Smith Machine Reverse Lunges", defaultWeight: 55, sets: 3, reps: "10/leg" },
+              { name: "Lying/Seated Hamstring Curl", defaultWeight: 50, sets: 3, reps: "15" },
+              { name: "Cable Pull-Throughs", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Glute Bridges (bodyweight)", defaultWeight: 0, sets: 2, reps: "20" }
             ]
           },
           day4: {
             name: "Day 4",
-            subtitle: "Full Body & Core",
+            subtitle: "Full Body + Core",
             exercises: [
-              { name: "Dumbbell Deadlifts", defaultWeight: 50, sets: 3, reps: "8-12" },
-              { name: "Goblet Squats", defaultWeight: 30, sets: 3, reps: "8-12" },
-              { name: "Arnold Press", defaultWeight: 20, sets: 3, reps: "8-12" },
-              { name: "Dumbbell Rows (single arm)", defaultWeight: 12, sets: 3, reps: "8-12" },
-              { name: "Glute-Ham Raises", defaultWeight: 15, sets: 3, reps: "10-12" },
-              { name: "Plank with Shoulder Taps", defaultWeight: 0, sets: 3, reps: "60s" },
-              { name: "Russian Twists", defaultWeight: 0, sets: 3, reps: "35" },
-              { name: "Hanging Leg Raises / Captain's Chair", defaultWeight: 0, sets: 3, reps: "20" }
+              { name: "Dumbbell Deadlift", defaultWeight: 40, sets: 3, reps: "10" },
+              { name: "Goblet Squats", defaultWeight: 40, sets: 3, reps: "12" },
+              { name: "Arnold Press", defaultWeight: 20, sets: 3, reps: "10" },
+              { name: "Single-Arm Dumbbell Rows", defaultWeight: 35, sets: 3, reps: "12/arm" },
+              { name: "Seated Leg Curl Machine", defaultWeight: 45, sets: 3, reps: "15" },
+              { name: "Plank with Shoulder Taps (Core Circuit)", defaultWeight: 0, sets: 2, reps: "30 sec" },
+              { name: "Russian Twists (Core Circuit)", defaultWeight: 15, sets: 2, reps: "20 total" },
+              { name: "Hanging Knee Raises / Captain's Chair (Core Circuit)", defaultWeight: 0, sets: 2, reps: "12" },
+              { name: "Battle Ropes 30s on/20s off (optional)", defaultWeight: 0, sets: 3, reps: "30 sec" }
             ]
           }
         }
@@ -982,6 +1448,16 @@
     let currentPage = 'workout';
     let workoutData = {};
     let workoutHistory = [];
+    
+    // Timer state
+    let workoutTimerInterval = null;
+    let workoutTimerSeconds = 0;
+    let workoutTimerRunning = false;
+    
+    // Rest timer state
+    let restTimerInterval = null;
+    let restTimerSeconds = 0;
+    let restTimerTotal = 60;
 
     // ========== INIT ==========
     function initializeApp() {
@@ -1006,19 +1482,28 @@
         console.error('Failed to load state:', e);
       }
       
-      // Initialize workout data structure
+      // Initialize workout data structure and fix any null/invalid values
       Object.keys(workoutProgram).forEach(week => {
         if (!workoutData[week]) workoutData[week] = {};
         Object.keys(workoutProgram[week].days).forEach(day => {
           if (!workoutData[week][day]) workoutData[week][day] = {};
-          workoutProgram[week].days[day].exercises.forEach((_, idx) => {
+          workoutProgram[week].days[day].exercises.forEach((exercise, idx) => {
             if (!workoutData[week][day][idx]) {
               workoutData[week][day][idx] = {
-                sets: workoutProgram[week].days[day].exercises[idx].sets,
-                reps: workoutProgram[week].days[day].exercises[idx].reps,
-                weight: workoutProgram[week].days[day].exercises[idx].defaultWeight,
+                sets: exercise.sets,
+                reps: exercise.reps,
+                weight: exercise.defaultWeight || 0,
                 completed: false
               };
+            } else {
+              // Fix any null or invalid values in existing data
+              const data = workoutData[week][day][idx];
+              if (data.weight == null || data.weight === '' || isNaN(data.weight)) {
+                data.weight = exercise.defaultWeight || 0;
+              }
+              if (data.sets == null) data.sets = exercise.sets;
+              if (data.reps == null) data.reps = exercise.reps;
+              if (data.completed == null) data.completed = false;
             }
           });
         });
@@ -1153,14 +1638,26 @@
 
     function renderExerciseCard(exercise, index, data = {}) {
       const isCompleted = data.completed || false;
-      const sets = data.sets ?? exercise.sets;
-      const reps = data.reps ?? exercise.reps;
-      const weight = data.weight ?? exercise.defaultWeight;
+      const sets = data.sets != null ? data.sets : exercise.sets;
+      const reps = data.reps != null ? data.reps : exercise.reps;
+      // Handle null, undefined, and ensure we get a number
+      let weight = data.weight;
+      if (weight == null || weight === '') {
+        weight = exercise.defaultWeight || 0;
+      }
+      weight = Number(weight) || 0;
+      
+      // Get last weight used for this exercise from history
+      const lastWeight = getLastWeight(exercise.name);
+      const isPR = lastWeight > 0 && weight > lastWeight;
       
       return `
         <div class="exercise-card${isCompleted ? ' completed' : ''}">
           <div class="exercise-header">
-            <div class="exercise-name">${exercise.name}</div>
+            <div class="exercise-name">
+              ${exercise.name}
+              ${isPR ? '<span class="pr-badge">🏆 PR!</span>' : ''}
+            </div>
             <button onclick="toggleComplete(${index})" type="button" class="complete-btn">
               ${isCompleted ? '✓' : '○'}
             </button>
@@ -1180,13 +1677,44 @@
             </div>
             <div class="detail-group">
               <div class="detail-label">Weight</div>
-              <input type="number" class="detail-input" value="${weight}" 
-                     onchange="updateExerciseData(${index}, 'weight', this.value)" 
-                     inputmode="decimal" />
+              <div class="weight-controls">
+                <button type="button" class="weight-btn" onclick="adjustWeight(${index}, -5)">−</button>
+                <input type="number" class="detail-input weight-input-field" value="${weight}" 
+                       id="weight-${index}"
+                       onchange="updateExerciseData(${index}, 'weight', this.value)" 
+                       inputmode="decimal" />
+                <button type="button" class="weight-btn" onclick="adjustWeight(${index}, 5)">+</button>
+              </div>
+              ${lastWeight > 0 ? `<div class="last-weight">Last: <span>${lastWeight} lb</span></div>` : ''}
             </div>
           </div>
         </div>
       `;
+    }
+    
+    // Get last weight used for an exercise from history
+    function getLastWeight(exerciseName) {
+      for (const session of workoutHistory) {
+        const exercise = session.exercises.find(e => e.name === exerciseName);
+        if (exercise && exercise.weight > 0) {
+          return exercise.weight;
+        }
+      }
+      return 0;
+    }
+    
+    // Adjust weight by increment
+    function adjustWeight(index, increment) {
+      const input = document.getElementById(`weight-${index}`);
+      if (input) {
+        const currentValue = Number(input.value) || 0;
+        const newWeight = Math.max(0, currentValue + increment);
+        input.value = newWeight;
+        updateExerciseData(index, 'weight', newWeight);
+        
+        // Haptic feedback if available
+        if (navigator.vibrate) navigator.vibrate(10);
+      }
     }
 
     // ========== ACTIONS ==========
@@ -1234,10 +1762,24 @@
       if (!workoutData[currentWeek][currentDay][index]) {
         workoutData[currentWeek][currentDay][index] = { sets: 3, reps: '10', weight: 0, completed: false };
       }
-      workoutData[currentWeek][currentDay][index].completed = !workoutData[currentWeek][currentDay][index].completed;
+      const wasCompleted = workoutData[currentWeek][currentDay][index].completed;
+      workoutData[currentWeek][currentDay][index].completed = !wasCompleted;
       saveState();
       renderDayTabs();
       renderWorkout();
+      
+      // Start rest timer when completing an exercise (not uncompleting)
+      if (!wasCompleted) {
+        // Determine rest time: 75-90 sec for big lifts, 45-60 sec for accessories
+        const exerciseName = workoutProgram[currentWeek].days[currentDay].exercises[index]?.name.toLowerCase() || '';
+        const isBigLift = exerciseName.includes('thrust') || exerciseName.includes('deadlift') || 
+                          exerciseName.includes('squat') || exerciseName.includes('hack') ||
+                          exerciseName.includes('press') || exerciseName.includes('row');
+        startRestTimer(isBigLift ? 75 : 45);
+        
+        // Haptic feedback
+        if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+      }
     }
 
     function addCustomExercise() {
@@ -1287,6 +1829,7 @@
         week: currentWeek,
         day: currentDay,
         workoutName: `Week ${currentWeek.replace('week', '')} - ${day.name}: ${day.subtitle}`,
+        duration: workoutTimerSeconds,
         exercises: []
       };
       
@@ -1308,7 +1851,15 @@
       
       workoutHistory.unshift(workoutSession);
       
-      showAchievement('Workout Saved!', `${workoutSession.exercises.length} exercises logged`, '💪');
+      // Stop and reset workout timer
+      stopWorkoutTimer();
+      resetWorkoutTimer();
+      
+      // Celebrate with confetti!
+      launchConfetti();
+      
+      const durationStr = workoutTimerSeconds > 0 ? ` in ${formatTime(workoutSession.duration)}` : '';
+      showAchievement('Workout Complete! 🎉', `${workoutSession.exercises.length} exercises logged${durationStr}`, '💪');
       
       // Remove custom exercises after saving
       workoutProgram[currentWeek].days[currentDay].exercises = workoutProgram[currentWeek].days[currentDay].exercises.filter(e => !e.isCustom);
@@ -1325,15 +1876,71 @@
       renderDayTabs();
       renderWorkout();
     }
+    
+    // Confetti celebration
+    function launchConfetti() {
+      const colors = ['#f39c12', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6'];
+      for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * 100 + 'vw';
+          confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+          confetti.style.width = (5 + Math.random() * 10) + 'px';
+          confetti.style.height = confetti.style.width;
+          confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+          document.body.appendChild(confetti);
+          setTimeout(() => confetti.remove(), 4000);
+        }, i * 30);
+      }
+    }
 
     function renderProgressPage() {
       const totalWorkouts = workoutHistory.length;
       const weekNum = parseInt(currentWeek.replace('week', ''));
+      const streak = calculateStreak();
       
       document.getElementById('totalWorkouts').textContent = totalWorkouts;
       document.getElementById('currentWeek').textContent = weekNum;
+      document.getElementById('streakCount').textContent = streak;
       
       renderHistory();
+    }
+    
+    // Calculate workout streak (consecutive days with workouts)
+    function calculateStreak() {
+      if (workoutHistory.length === 0) return 0;
+      
+      let streak = 0;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      // Get unique workout dates
+      const workoutDates = [...new Set(workoutHistory.map(w => {
+        const d = new Date(w.date);
+        d.setHours(0, 0, 0, 0);
+        return d.getTime();
+      }))].sort((a, b) => b - a);
+      
+      // Check if there's a workout today or yesterday to start the streak
+      const mostRecentDate = workoutDates[0];
+      const daysSinceLastWorkout = Math.floor((today.getTime() - mostRecentDate) / (1000 * 60 * 60 * 24));
+      
+      if (daysSinceLastWorkout > 1) return 0; // Streak broken
+      
+      // Count consecutive days
+      let checkDate = mostRecentDate;
+      for (let i = 0; i < workoutDates.length; i++) {
+        if (workoutDates[i] === checkDate) {
+          streak++;
+          checkDate -= (1000 * 60 * 60 * 24); // Previous day
+        } else if (workoutDates[i] < checkDate - (1000 * 60 * 60 * 24)) {
+          break; // Gap found
+        }
+      }
+      
+      return streak;
     }
 
     function renderHistory() {
@@ -1521,6 +2128,119 @@
       
       reader.readAsText(file);
       event.target.value = ''; // Reset file input
+    }
+
+    // ========== WORKOUT TIMER ==========
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    
+    function updateWorkoutTimerDisplay() {
+      const display = document.getElementById('workoutTimerDisplay');
+      if (display) {
+        display.textContent = formatTime(workoutTimerSeconds);
+      }
+    }
+    
+    function toggleWorkoutTimer() {
+      if (workoutTimerRunning) {
+        stopWorkoutTimer();
+      } else {
+        startWorkoutTimer();
+      }
+    }
+    
+    function startWorkoutTimer() {
+      workoutTimerRunning = true;
+      const btn = document.getElementById('timerToggleBtn');
+      if (btn) {
+        btn.textContent = 'Pause';
+        btn.classList.add('active');
+      }
+      workoutTimerInterval = setInterval(() => {
+        workoutTimerSeconds++;
+        updateWorkoutTimerDisplay();
+      }, 1000);
+    }
+    
+    function stopWorkoutTimer() {
+      workoutTimerRunning = false;
+      const btn = document.getElementById('timerToggleBtn');
+      if (btn) {
+        btn.textContent = 'Resume';
+        btn.classList.remove('active');
+      }
+      if (workoutTimerInterval) {
+        clearInterval(workoutTimerInterval);
+        workoutTimerInterval = null;
+      }
+    }
+    
+    function resetWorkoutTimer() {
+      workoutTimerSeconds = 0;
+      workoutTimerRunning = false;
+      const btn = document.getElementById('timerToggleBtn');
+      if (btn) {
+        btn.textContent = 'Start';
+        btn.classList.remove('active');
+      }
+      if (workoutTimerInterval) {
+        clearInterval(workoutTimerInterval);
+        workoutTimerInterval = null;
+      }
+      updateWorkoutTimerDisplay();
+    }
+    
+    // ========== REST TIMER ==========
+    function startRestTimer(seconds) {
+      restTimerTotal = seconds;
+      restTimerSeconds = seconds;
+      
+      const overlay = document.getElementById('restTimerOverlay');
+      const circle = document.getElementById('restTimerCircle');
+      const timeDisplay = document.getElementById('restTimerTime');
+      const subtitle = document.getElementById('restTimerSubtitle');
+      
+      subtitle.textContent = seconds >= 60 ? 'Big lift - take your time!' : 'Quick rest - stay warm!';
+      
+      overlay.classList.add('show');
+      updateRestTimerDisplay();
+      
+      // Clear any existing interval
+      if (restTimerInterval) clearInterval(restTimerInterval);
+      
+      restTimerInterval = setInterval(() => {
+        restTimerSeconds--;
+        updateRestTimerDisplay();
+        
+        if (restTimerSeconds <= 0) {
+          skipRestTimer();
+          // Vibrate when done
+          if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 100]);
+        }
+      }, 1000);
+    }
+    
+    function updateRestTimerDisplay() {
+      const circle = document.getElementById('restTimerCircle');
+      const timeDisplay = document.getElementById('restTimerTime');
+      
+      if (timeDisplay) timeDisplay.textContent = restTimerSeconds;
+      if (circle) {
+        const progress = ((restTimerTotal - restTimerSeconds) / restTimerTotal) * 100;
+        circle.style.setProperty('--progress', progress + '%');
+      }
+    }
+    
+    function skipRestTimer() {
+      if (restTimerInterval) {
+        clearInterval(restTimerInterval);
+        restTimerInterval = null;
+      }
+      const overlay = document.getElementById('restTimerOverlay');
+      if (overlay) overlay.classList.remove('show');
     }
 
     function showAchievement(title, text, icon = '💪') {
