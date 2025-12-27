@@ -87,28 +87,40 @@
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border-subtle);
-      padding: 16px 20px; 
+      padding: 12px 16px; 
       position: sticky; 
       top: 0; 
       z-index: 50;
     }
-    .header-content { display: flex; justify-content: space-between; align-items: center; }
-    .header-brand { display: flex; align-items: center; gap: 10px; }
+    .header-content { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      gap: 12px;
+      max-width: 100%;
+    }
+    .header-brand { 
+      display: flex; 
+      align-items: center; 
+      gap: 8px;
+      flex-shrink: 0;
+    }
     .header-logo {
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-      border-radius: 10px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
       box-shadow: 0 4px 16px var(--accent-primary-glow);
+      flex-shrink: 0;
     }
-    .header-logo .icon { width: 20px; height: 20px; }
+    .header-logo .icon { width: 18px; height: 18px; }
     .header-title { 
       font-family: 'Outfit', sans-serif;
-      font-size: 22px; 
+      font-size: 18px; 
       font-weight: 800; 
       letter-spacing: -0.5px;
       background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
@@ -117,31 +129,34 @@
       background-clip: text;
     }
     .header-subtitle { 
-      color: var(--text-muted); 
-      font-size: 11px; 
-      margin-top: 2px; 
-      font-weight: 500;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
+      display: none; /* Hide subtitle on mobile to save space */
     }
-    .nav-tabs { display: flex; gap: 6px; }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .nav-tabs { display: flex; gap: 4px; }
     .nav-tab { 
-      padding: 10px 18px; 
-      border-radius: 10px; 
+      padding: 8px 12px; 
+      border-radius: 8px; 
       background: transparent; 
       border: 1px solid var(--border-medium);
       color: var(--text-secondary); 
-      font-size: 12px; 
+      font-size: 11px; 
       font-weight: 600; 
       cursor: pointer; 
       transition: all 0.2s ease;
       text-transform: uppercase; 
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
+      white-space: nowrap;
     }
-    .nav-tab .icon { width: 16px; height: 16px; }
+    .nav-tab .icon { width: 14px; height: 14px; }
+    .nav-tab-text { display: none; } /* Hide text on very small screens */
     .nav-tab:hover { 
       background: rgba(255,255,255,0.05);
       border-color: var(--border-accent);
@@ -150,10 +165,25 @@
       background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
       color: #fff; 
       border-color: transparent;
-      box-shadow: 0 4px 20px var(--accent-primary-glow);
+      box-shadow: 0 4px 16px var(--accent-primary-glow);
       font-weight: 700;
     }
     .nav-tab:active { transform: scale(0.95); }
+    
+    /* Show text on larger screens */
+    @media (min-width: 380px) {
+      .nav-tab-text { display: inline; }
+      .nav-tab { padding: 8px 14px; }
+    }
+    @media (min-width: 480px) {
+      .header { padding: 14px 20px; }
+      .header-logo { width: 36px; height: 36px; border-radius: 10px; }
+      .header-logo .icon { width: 20px; height: 20px; }
+      .header-title { font-size: 20px; }
+      .header-subtitle { display: block; }
+      .nav-tab { padding: 10px 16px; font-size: 12px; gap: 6px; }
+      .nav-tab .icon { width: 16px; height: 16px; }
+    }
     
     /* Pages */
     .page { display: none; animation: fadeIn 0.3s ease; }
@@ -1217,20 +1247,20 @@
     
     /* User display in header */
     .user-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      display: none; /* Hide email on mobile */
     }
     .user-email {
       font-size: 10px;
       color: var(--text-muted);
-      max-width: 120px;
+      max-width: 100px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
     .logout-btn {
-      padding: 8px 14px;
+      width: 34px;
+      height: 34px;
+      padding: 0;
       border-radius: 8px;
       border: 1px solid rgba(255, 71, 87, 0.2);
       background: transparent;
@@ -1241,17 +1271,28 @@
       transition: all 0.2s ease;
       display: flex;
       align-items: center;
-      gap: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      justify-content: center;
+      flex-shrink: 0;
     }
-    .logout-btn .icon { width: 14px; height: 14px; }
+    .logout-btn .icon { width: 16px; height: 16px; }
+    .logout-btn-text { display: none; }
     .logout-btn:hover {
       background: rgba(255, 71, 87, 0.1);
       border-color: var(--accent-secondary);
     }
     .logout-btn:active {
       transform: scale(0.95);
+    }
+    
+    @media (min-width: 480px) {
+      .logout-btn {
+        width: auto;
+        height: auto;
+        padding: 8px 12px;
+        gap: 6px;
+      }
+      .logout-btn-text { display: inline; }
+      .logout-btn .icon { width: 14px; height: 14px; }
     }
   </style>
 </head>
@@ -1305,25 +1346,25 @@
         <div class="header-logo">
           <i data-lucide="dumbbell" class="icon"></i>
         </div>
-      <div>
+        <div>
           <div class="header-title">FLEXFORGE</div>
           <div class="header-subtitle" id="headerSubtitle">Forge Your Workout</div>
+        </div>
       </div>
-      </div>
-      <div class="user-info">
-      <div class="nav-tabs">
+      <div class="header-right">
+        <div class="nav-tabs">
           <button class="nav-tab active" type="button" onclick="switchPage('workout')">
             <i data-lucide="zap" class="icon"></i>
-            Train
+            <span class="nav-tab-text">Train</span>
           </button>
           <button class="nav-tab" type="button" onclick="switchPage('progress')">
             <i data-lucide="trending-up" class="icon"></i>
-            Stats
+            <span class="nav-tab-text">Stats</span>
           </button>
         </div>
-        <button type="button" class="logout-btn" onclick="handleSignOut()">
+        <button type="button" class="logout-btn" onclick="handleSignOut()" title="Sign Out">
           <i data-lucide="log-out" class="icon"></i>
-          Exit
+          <span class="logout-btn-text">Exit</span>
         </button>
       </div>
     </div>
