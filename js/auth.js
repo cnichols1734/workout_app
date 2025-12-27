@@ -6,18 +6,18 @@
 function toggleAuthMode() {
   isSignUpMode = !isSignUpMode;
   const formTitle = document.getElementById('authFormTitle');
-  const submitBtn = document.getElementById('authSubmitBtn');
+  const btnText = document.getElementById('authBtnText');
   const toggleText = document.getElementById('authToggleText');
   const toggleLink = document.getElementById('authToggleLink');
   
   if (isSignUpMode) {
     formTitle.textContent = 'Create Account';
-    submitBtn.textContent = 'Sign Up';
+    btnText.textContent = 'Sign Up';
     toggleText.textContent = 'Already have an account?';
     toggleLink.textContent = 'Sign in';
   } else {
-    formTitle.textContent = 'Sign In';
-    submitBtn.textContent = 'Sign In';
+    formTitle.textContent = 'Welcome Back';
+    btnText.textContent = 'Sign In';
     toggleText.textContent = "Don't have an account?";
     toggleLink.textContent = 'Create one';
   }
@@ -30,22 +30,24 @@ async function handleAuth() {
   const password = document.getElementById('authPassword').value;
   const submitBtn = document.getElementById('authSubmitBtn');
   const errorEl = document.getElementById('authError');
+  const errorTextEl = document.getElementById('authErrorText');
+  const btnText = document.getElementById('authBtnText');
   
   if (!email || !password) {
-    errorEl.textContent = 'Please enter both email and password';
+    errorTextEl.textContent = 'Please enter both email and password';
     errorEl.classList.add('show');
     return;
   }
   
   if (password.length < 6) {
-    errorEl.textContent = 'Password must be at least 6 characters';
+    errorTextEl.textContent = 'Password must be at least 6 characters';
     errorEl.classList.add('show');
     return;
   }
   
   // Show loading state
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span class="auth-loading"></span>' + (isSignUpMode ? 'Creating Account...' : 'Signing In...');
+  btnText.innerHTML = '<span class="auth-loading"></span> ' + (isSignUpMode ? 'Creating...' : 'Signing In...');
   errorEl.classList.remove('show');
   
   try {
@@ -70,23 +72,23 @@ async function handleAuth() {
     // Success - the auth state change listener will handle the rest
     if (isSignUpMode && result.data.user && !result.data.session) {
       // Email confirmation required
-      errorEl.textContent = 'Check your email to confirm your account!';
-      errorEl.style.background = 'rgba(46, 204, 113, 0.15)';
-      errorEl.style.borderColor = 'rgba(46, 204, 113, 0.3)';
+      errorTextEl.textContent = 'Check your email to confirm your account!';
+      errorEl.style.background = 'rgba(0, 245, 160, 0.1)';
+      errorEl.style.borderColor = 'rgba(0, 245, 160, 0.25)';
       errorEl.style.color = 'var(--accent-green)';
       errorEl.classList.add('show');
     }
     
   } catch (error) {
     console.error('Auth error:', error);
-    errorEl.style.background = 'rgba(231, 76, 60, 0.15)';
-    errorEl.style.borderColor = 'rgba(231, 76, 60, 0.3)';
-    errorEl.style.color = 'var(--accent-red)';
-    errorEl.textContent = error.message || 'Authentication failed. Please try again.';
+    errorEl.style.background = 'rgba(255, 71, 87, 0.1)';
+    errorEl.style.borderColor = 'rgba(255, 71, 87, 0.25)';
+    errorEl.style.color = 'var(--accent-secondary)';
+    errorTextEl.textContent = error.message || 'Authentication failed. Please try again.';
     errorEl.classList.add('show');
   } finally {
     submitBtn.disabled = false;
-    submitBtn.textContent = isSignUpMode ? 'Sign Up' : 'Sign In';
+    btnText.textContent = isSignUpMode ? 'Sign Up' : 'Sign In';
   }
 }
 

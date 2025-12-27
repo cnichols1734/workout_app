@@ -64,20 +64,22 @@ function renderDayTabs() {
       <div class="day-name">${day.name}</div>
       <div class="day-subtitle">${day.subtitle}</div>
       ${hasSavedWorkout ? `<div class="day-date">${dateStr}</div>` : ''}
-      ${hasSavedWorkout ? '<div class="day-check">✓</div>' : ''}
+      ${hasSavedWorkout ? '<div class="day-check"><i data-lucide="check-circle-2"></i></div>' : ''}
     `;
     tab.onclick = () => switchDay(dayKey);
     container.appendChild(tab);
   });
+  lucide.createIcons();
 }
 
 function renderWeekInfo() {
   const container = document.getElementById('weekInfo');
   const info = workoutProgram[currentWeek].info;
   container.innerHTML = `
-    <div class="week-info-title">Week ${currentWeek.replace('week', '')} Focus</div>
+    <div class="week-info-title"><i data-lucide="target"></i> Week ${currentWeek.replace('week', '')} Focus</div>
     <div class="week-info-text">${info}</div>
   `;
+  lucide.createIcons();
 }
 
 function renderWorkout() {
@@ -93,23 +95,27 @@ function renderWorkout() {
     ${exercises.map((exercise, idx) => renderExerciseCard(exercise, idx, dayData[idx])).join('')}
     
     <div class="custom-exercise-section">
-      <div class="custom-exercise-title">➕ Add Custom Exercise</div>
+      <div class="custom-exercise-title"><i data-lucide="plus-circle"></i> Add Custom Exercise</div>
       <input type="text" id="customName" class="custom-input" placeholder="Exercise name (e.g., Extra Cardio)" />
       <div class="custom-row">
         <input type="number" id="customSets" class="custom-input" placeholder="Sets" inputmode="numeric" />
         <input type="number" id="customReps" class="custom-input" placeholder="Reps" inputmode="numeric" />
         <input type="number" id="customWeight" class="custom-input" placeholder="Weight" inputmode="decimal" />
       </div>
-      <button class="add-custom-btn" type="button" onclick="addCustomExercise()">Add to Workout</button>
+      <button class="add-custom-btn" type="button" onclick="addCustomExercise()">
+        <i data-lucide="plus"></i> Add to Workout
+      </button>
     </div>
     
     <button class="save-workout-btn ${hasAnyCompleted ? 'ready' : ''}" 
             type="button" 
             onclick="saveWorkout()"
             ${!hasAnyCompleted ? 'disabled' : ''}>
-      ${hasAnyCompleted ? '💾 Save Workout' : '⏳ Complete At Least One Exercise'}
+      <i data-lucide="${hasAnyCompleted ? 'save' : 'clock'}"></i>
+      ${hasAnyCompleted ? 'Save Workout' : 'Complete At Least One Exercise'}
     </button>
   `;
+  lucide.createIcons();
 }
 
 function renderExerciseCard(exercise, index, data = {}) {
@@ -132,10 +138,10 @@ function renderExerciseCard(exercise, index, data = {}) {
       <div class="exercise-header">
         <div class="exercise-name">
           ${exercise.name}
-          ${isPR ? '<span class="pr-badge">🏆 PR!</span>' : ''}
+          ${isPR ? '<span class="pr-badge"><i data-lucide="trophy"></i> PR!</span>' : ''}
         </div>
         <button onclick="toggleComplete(${index})" type="button" class="complete-btn">
-          ${isCompleted ? '✓' : '○'}
+          <i data-lucide="${isCompleted ? 'check' : 'circle'}" class="icon"></i>
         </button>
       </div>
       
@@ -154,12 +160,16 @@ function renderExerciseCard(exercise, index, data = {}) {
         <div class="detail-group">
           <div class="detail-label">Weight</div>
           <div class="weight-controls">
-            <button type="button" class="weight-btn" onclick="adjustWeight(${index}, -5)">−</button>
+            <button type="button" class="weight-btn" onclick="adjustWeight(${index}, -5)">
+              <i data-lucide="minus" class="icon"></i>
+            </button>
             <input type="number" class="detail-input weight-input-field" value="${weight}" 
                    id="weight-${index}"
                    onchange="updateExerciseData(${index}, 'weight', this.value)" 
                    inputmode="decimal" />
-            <button type="button" class="weight-btn" onclick="adjustWeight(${index}, 5)">+</button>
+            <button type="button" class="weight-btn" onclick="adjustWeight(${index}, 5)">
+              <i data-lucide="plus" class="icon"></i>
+            </button>
           </div>
           ${lastWeight > 0 ? `<div class="last-weight">Last: <span>${lastWeight} lb</span></div>` : ''}
         </div>
@@ -185,7 +195,7 @@ function renderProgressPage() {
   const streak = calculateStreak();
   
   document.getElementById('totalWorkouts').textContent = totalWorkouts;
-  document.getElementById('currentWeek').textContent = weekNum;
+  document.getElementById('currentWeekStat').textContent = weekNum;
   document.getElementById('streakCount').textContent = streak;
   
   renderHistory();
@@ -232,9 +242,10 @@ function renderHistory() {
   if (workoutHistory.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
-        <div class="empty-state-icon">📋</div>
+        <i data-lucide="clipboard-list" class="empty-state-icon"></i>
         <div class="empty-state-text">No workouts yet. Start training!</div>
       </div>`;
+    lucide.createIcons();
     return;
   }
   
@@ -252,7 +263,10 @@ function renderHistory() {
           </div>
           <div class="history-actions">
             <div class="history-badge">${session.exercises.length} exercises</div>
-            <button class="delete-btn" type="button" onclick="deleteWorkout('${session.id}')">Delete</button>
+            <button class="delete-btn" type="button" onclick="deleteWorkout('${session.id}')">
+              <i data-lucide="trash-2" class="icon"></i>
+              Delete
+            </button>
           </div>
         </div>
         <div class="history-exercises">
@@ -264,18 +278,22 @@ function renderHistory() {
         </div>
       </div>`;
   }).join('');
+  lucide.createIcons();
 }
 
-function showAchievement(title, text, icon = '💪') {
+function showAchievement(title, text, iconName = 'trophy') {
   const popup = document.getElementById('achievementPopup');
   const overlay = document.getElementById('overlay');
   const iconEl = document.getElementById('achievementIcon');
   const titleEl = document.getElementById('achievementTitle');
   const textEl = document.getElementById('achievementText');
   
-  iconEl.textContent = icon;
+  // Update icon - iconName should be a Lucide icon name
+  iconEl.innerHTML = `<i data-lucide="${iconName}" class="icon"></i>`;
   titleEl.textContent = title;
   textEl.textContent = text;
+  
+  lucide.createIcons();
   
   overlay.classList.add('show');
   popup.classList.add('show');
@@ -283,7 +301,7 @@ function showAchievement(title, text, icon = '💪') {
   setTimeout(() => {
     overlay.classList.remove('show');
     popup.classList.remove('show');
-  }, 1250);
+  }, 1500);
 }
 
 function showConfirm(title, text, onConfirm) {
@@ -318,7 +336,7 @@ function showConfirm(title, text, onConfirm) {
 
 // Confetti celebration
 function launchConfetti() {
-  const colors = ['#f39c12', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6'];
+  const colors = ['#ff6b35', '#ff4757', '#4facfe', '#00f5a0', '#ffd700'];
   for (let i = 0; i < 50; i++) {
     setTimeout(() => {
       const confetti = document.createElement('div');

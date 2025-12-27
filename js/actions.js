@@ -86,7 +86,7 @@ function addCustomExercise() {
   const weight = document.getElementById('customWeight').value;
 
   if (!name) {
-    showAchievement('Missing Info', 'Please enter exercise name', '⚠️');
+    showAchievement('Missing Info', 'Please enter exercise name', 'alert-circle');
     return;
   }
 
@@ -113,7 +113,7 @@ function addCustomExercise() {
   debouncedSave();
   renderDayTabs();
   renderWorkout();
-  showAchievement('Added!', `${name} added to workout`, '✅');
+  showAchievement('Added!', `${name} added to workout`, 'check-circle');
 }
 
 async function saveWorkout() {
@@ -133,7 +133,7 @@ async function saveWorkout() {
   });
   
   if (exercises.length === 0) {
-    showAchievement('No Exercises', 'Complete at least one exercise', '⚠️');
+    showAchievement('No Exercises', 'Complete at least one exercise', 'alert-circle');
     return;
   }
   
@@ -174,7 +174,7 @@ async function saveWorkout() {
     launchConfetti();
     
     const durationStr = workoutTimerSeconds > 0 ? ` in ${formatTime(data.duration)}` : '';
-    showAchievement('Workout Complete! 🎉', `${exercises.length} exercises logged${durationStr}`, '💪');
+    showAchievement('Workout Complete!', `${exercises.length} exercises logged${durationStr}`, 'trophy');
     
     // Remove custom exercises after saving
     workoutProgram[currentWeek].days[currentDay].exercises = workoutProgram[currentWeek].days[currentDay].exercises.filter(e => !e.isCustom);
@@ -193,7 +193,7 @@ async function saveWorkout() {
     
   } catch (e) {
     console.error('Failed to save workout:', e);
-    showAchievement('Save Failed', 'Could not save workout. Try again.', '❌');
+    showAchievement('Save Failed', 'Could not save workout. Try again.', 'x-circle');
   }
 }
 
@@ -216,11 +216,11 @@ function deleteWorkout(sessionId) {
       }
       
       renderProgressPage();
-      showAchievement('Deleted', 'Workout removed from history', '🗑️');
+      showAchievement('Deleted', 'Workout removed from history', 'trash-2');
       
     } catch (e) {
       console.error('Failed to delete workout:', e);
-      showAchievement('Delete Failed', 'Could not delete workout', '❌');
+      showAchievement('Delete Failed', 'Could not delete workout', 'x-circle');
     }
   });
 }
@@ -228,7 +228,7 @@ function deleteWorkout(sessionId) {
 // Backup/Restore functions
 function downloadBackup() {
   if (workoutHistory.length === 0) {
-    showAchievement('No Data', 'No workouts to backup yet', '⚠️');
+    showAchievement('No Data', 'No workouts to backup yet', 'alert-circle');
     return;
   }
 
@@ -256,7 +256,7 @@ function downloadBackup() {
   document.body.removeChild(a);
   window.URL.revokeObjectURL(url);
 
-  showAchievement('Backup Downloaded!', 'Save this file safely', '💾');
+  showAchievement('Backup Downloaded!', 'Save this file safely', 'download');
 }
 
 function restoreBackup(event) {
@@ -340,11 +340,11 @@ function restoreBackup(event) {
       }
       
       renderProgressPage();
-      showAchievement('Backup Restored!', `${newSessions.length} workouts imported`, '✅');
+      showAchievement('Backup Restored!', `${newSessions.length} workouts imported`, 'check-circle');
       
     } catch (error) {
       console.error('Restore error:', error);
-      showAchievement('Restore Failed', 'Invalid backup file format', '❌');
+      showAchievement('Restore Failed', 'Invalid backup file format', 'x-circle');
     }
   };
   
