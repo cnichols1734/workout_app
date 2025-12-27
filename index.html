@@ -12,6 +12,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&display=swap" rel="stylesheet">
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg-primary: #0d1117;
@@ -840,19 +842,259 @@
     /* Stats Grid Update */
     .stats-grid { grid-template-columns: 1fr 1fr; }
     .stats-grid .stat-card:nth-child(3) { grid-column: span 2; }
+    
+    /* ===== AUTH STYLES ===== */
+    .auth-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--bg-primary);
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .auth-screen.hidden { display: none; }
+    
+    .auth-container {
+      width: 100%;
+      max-width: 360px;
+      animation: fadeIn 0.4s ease;
+    }
+    
+    .auth-logo {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .auth-logo-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 4px 24px var(--accent-orange-glow));
+    }
+    .auth-logo-title {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+    .auth-logo-subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-top: 8px;
+      font-weight: 500;
+    }
+    
+    .auth-form {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 28px 24px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .auth-form-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    
+    .auth-input-group {
+      margin-bottom: 16px;
+    }
+    .auth-input-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .auth-input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(0, 0, 0, 0.25);
+      font-size: 16px;
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s ease;
+    }
+    .auth-input:focus {
+      outline: none;
+      border-color: var(--accent-orange);
+      box-shadow: 0 0 0 3px var(--accent-orange-glow);
+    }
+    .auth-input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .auth-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, var(--accent-orange) 0%, #e67e22 100%);
+      color: #000;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 8px;
+      box-shadow: 0 4px 20px var(--accent-orange-glow);
+    }
+    .auth-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px var(--accent-orange-glow);
+    }
+    .auth-btn:active {
+      transform: scale(0.98);
+    }
+    .auth-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .auth-toggle {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .auth-toggle-link {
+      color: var(--accent-orange);
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      margin-left: 4px;
+    }
+    .auth-toggle-link:hover {
+      text-decoration: underline;
+    }
+    
+    .auth-error {
+      background: rgba(231, 76, 60, 0.15);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: var(--accent-red);
+      display: none;
+    }
+    .auth-error.show { display: block; }
+    
+    .auth-loading {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid transparent;
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: authSpin 0.8s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    @keyframes authSpin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* User display in header */
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .user-email {
+      font-size: 11px;
+      color: var(--text-secondary);
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .logout-btn {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(231, 76, 60, 0.3);
+      background: transparent;
+      color: var(--accent-red);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .logout-btn:hover {
+      background: rgba(231, 76, 60, 0.1);
+    }
+    .logout-btn:active {
+      transform: scale(0.95);
+    }
   </style>
 </head>
 <body>
+  <!-- Auth Screen -->
+  <div id="authScreen" class="auth-screen">
+    <div class="auth-container">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">💪</div>
+        <div class="auth-logo-title">8-WEEK PROGRAM</div>
+        <div class="auth-logo-subtitle">Full-Body Tone • Glute Focus</div>
+      </div>
+      
+      <div class="auth-form">
+        <div class="auth-form-title" id="authFormTitle">Sign In</div>
+        
+        <div class="auth-error" id="authError"></div>
+        
+        <div class="auth-input-group">
+          <label class="auth-input-label">Email</label>
+          <input type="email" id="authEmail" class="auth-input" placeholder="your@email.com" autocomplete="email" />
+        </div>
+        
+        <div class="auth-input-group">
+          <label class="auth-input-label">Password</label>
+          <input type="password" id="authPassword" class="auth-input" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+        
+        <button type="button" id="authSubmitBtn" class="auth-btn" onclick="handleAuth()">
+          Sign In
+        </button>
+        
+        <div class="auth-toggle">
+          <span id="authToggleText">Don't have an account?</span>
+          <a class="auth-toggle-link" id="authToggleLink" onclick="toggleAuthMode()">Create one</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Header -->
   <div class="header">
     <div class="header-content">
       <div>
         <div class="header-title">8-WEEK PROGRAM</div>
-        <div class="header-subtitle">Full-Body Tone • Glute Focus</div>
+        <div class="header-subtitle" id="headerSubtitle">Full-Body Tone • Glute Focus</div>
       </div>
-      <div class="nav-tabs">
-        <button class="nav-tab active" type="button" onclick="switchPage('workout')">Train</button>
-        <button class="nav-tab" type="button" onclick="switchPage('progress')">Stats</button>
+      <div class="user-info">
+        <div class="nav-tabs">
+          <button class="nav-tab active" type="button" onclick="switchPage('workout')">Train</button>
+          <button class="nav-tab" type="button" onclick="switchPage('progress')">Stats</button>
+        </div>
+        <button type="button" class="logout-btn" onclick="handleSignOut()">Logout</button>
       </div>
     </div>
   </div>
@@ -964,6 +1206,16 @@
   </div>
 
   <script>
+    // ========== SUPABASE CONFIG ==========
+    const SUPABASE_URL = 'https://mvnsuzxziyvjbiljwiye.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im12bnN1enh6aXl2amJpbGp3aXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MDAyMTksImV4cCI6MjA4MjM3NjIxOX0.D3hqTMKHzfPoPF-KaeyapPNOpsDKwtmaT1oAmALZ-RA';
+    
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // Auth state
+    let currentUser = null;
+    let isSignUpMode = false;
+    
     // ========== DATA ==========
     const STATE_KEY = 'workout_8week_v1';
     
@@ -1460,26 +1712,199 @@
     let restTimerTotal = 60;
 
     // ========== INIT ==========
-    function initializeApp() {
-      loadState();
+    async function initializeApp() {
+      // Check for existing session first
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      
+      if (session) {
+        currentUser = session.user;
+        await showMainApp();
+      } else {
+        showAuthScreen();
+      }
+      
+      // Listen for auth changes
+      supabaseClient.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_IN' && session) {
+          currentUser = session.user;
+          await showMainApp();
+        } else if (event === 'SIGNED_OUT') {
+          currentUser = null;
+          showAuthScreen();
+        }
+      });
+    }
+    
+    async function showMainApp() {
+      document.getElementById('authScreen').classList.add('hidden');
+      await loadState();
       renderWeekTabs();
       renderDayTabs();
       renderWeekInfo();
       renderWorkout();
     }
-
-    function loadState() {
+    
+    function showAuthScreen() {
+      document.getElementById('authScreen').classList.remove('hidden');
+      // Reset form
+      document.getElementById('authEmail').value = '';
+      document.getElementById('authPassword').value = '';
+      document.getElementById('authError').classList.remove('show');
+    }
+    
+    // ========== AUTH FUNCTIONS ==========
+    function toggleAuthMode() {
+      isSignUpMode = !isSignUpMode;
+      const formTitle = document.getElementById('authFormTitle');
+      const submitBtn = document.getElementById('authSubmitBtn');
+      const toggleText = document.getElementById('authToggleText');
+      const toggleLink = document.getElementById('authToggleLink');
+      
+      if (isSignUpMode) {
+        formTitle.textContent = 'Create Account';
+        submitBtn.textContent = 'Sign Up';
+        toggleText.textContent = 'Already have an account?';
+        toggleLink.textContent = 'Sign in';
+      } else {
+        formTitle.textContent = 'Sign In';
+        submitBtn.textContent = 'Sign In';
+        toggleText.textContent = "Don't have an account?";
+        toggleLink.textContent = 'Create one';
+      }
+      
+      document.getElementById('authError').classList.remove('show');
+    }
+    
+    async function handleAuth() {
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value;
+      const submitBtn = document.getElementById('authSubmitBtn');
+      const errorEl = document.getElementById('authError');
+      
+      if (!email || !password) {
+        errorEl.textContent = 'Please enter both email and password';
+        errorEl.classList.add('show');
+        return;
+      }
+      
+      if (password.length < 6) {
+        errorEl.textContent = 'Password must be at least 6 characters';
+        errorEl.classList.add('show');
+        return;
+      }
+      
+      // Show loading state
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="auth-loading"></span>' + (isSignUpMode ? 'Creating Account...' : 'Signing In...');
+      errorEl.classList.remove('show');
+      
       try {
-        const raw = localStorage.getItem(STATE_KEY);
-        if (raw) {
-          const state = JSON.parse(raw);
-          workoutData = state.workoutData || {};
-          workoutHistory = state.workoutHistory || [];
-          currentWeek = state.currentWeek || 'week1';
-          currentDay = state.currentDay || 'day1';
+        let result;
+        
+        if (isSignUpMode) {
+          result = await supabaseClient.auth.signUp({
+            email: email,
+            password: password
+          });
+        } else {
+          result = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+          });
         }
+        
+        if (result.error) {
+          throw result.error;
+        }
+        
+        // Success - the auth state change listener will handle the rest
+        if (isSignUpMode && result.data.user && !result.data.session) {
+          // Email confirmation required
+          errorEl.textContent = 'Check your email to confirm your account!';
+          errorEl.style.background = 'rgba(46, 204, 113, 0.15)';
+          errorEl.style.borderColor = 'rgba(46, 204, 113, 0.3)';
+          errorEl.style.color = 'var(--accent-green)';
+          errorEl.classList.add('show');
+        }
+        
+      } catch (error) {
+        console.error('Auth error:', error);
+        errorEl.style.background = 'rgba(231, 76, 60, 0.15)';
+        errorEl.style.borderColor = 'rgba(231, 76, 60, 0.3)';
+        errorEl.style.color = 'var(--accent-red)';
+        errorEl.textContent = error.message || 'Authentication failed. Please try again.';
+        errorEl.classList.add('show');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = isSignUpMode ? 'Sign Up' : 'Sign In';
+      }
+    }
+    
+    async function handleSignOut() {
+      try {
+        await supabaseClient.auth.signOut();
+        // Reset local state
+        workoutData = {};
+        workoutHistory = [];
+        currentWeek = 'week1';
+        currentDay = 'day1';
+      } catch (error) {
+        console.error('Sign out error:', error);
+      }
+    }
+
+    async function loadState() {
+      if (!currentUser) return;
+      
+      try {
+        // Load user progress from Supabase
+        const { data: progressData, error: progressError } = await supabaseClient
+          .from('user_progress')
+          .select('*')
+          .eq('user_id', currentUser.id);
+        
+        if (progressError) throw progressError;
+        
+        // Load workout history from Supabase
+        const { data: historyData, error: historyError } = await supabaseClient
+          .from('workout_history')
+          .select('*')
+          .eq('user_id', currentUser.id)
+          .order('date', { ascending: false });
+        
+        if (historyError) throw historyError;
+        
+        // Transform progress data back into workoutData structure
+        workoutData = {};
+        if (progressData) {
+          progressData.forEach(row => {
+            if (!workoutData[row.week]) workoutData[row.week] = {};
+            if (!workoutData[row.week][row.day]) workoutData[row.week][row.day] = {};
+            workoutData[row.week][row.day][row.exercise_index] = {
+              sets: row.sets,
+              reps: row.reps,
+              weight: Number(row.weight) || 0,
+              completed: row.completed || false
+            };
+          });
+        }
+        
+        // Transform history data
+        workoutHistory = [];
+        if (historyData) {
+          workoutHistory = historyData.map(row => ({
+            id: row.id,
+            date: row.date,
+            week: row.week,
+            day: row.day,
+            workoutName: row.workout_name,
+            duration: row.duration || 0,
+            exercises: row.exercises || []
+          }));
+        }
+        
       } catch (e) {
-        console.error('Failed to load state:', e);
+        console.error('Failed to load state from Supabase:', e);
       }
       
       // Initialize workout data structure and fix any null/invalid values
@@ -1508,22 +1933,54 @@
           });
         });
       });
-      
-      saveState();
     }
 
-    function saveState() {
+    async function saveState() {
+      if (!currentUser) return;
+      
       try {
-        const state = {
-          workoutData,
-          workoutHistory,
-          currentWeek,
-          currentDay
-        };
-        localStorage.setItem(STATE_KEY, JSON.stringify(state));
+        // Save user progress to Supabase - upsert all current workout data
+        const progressRows = [];
+        Object.keys(workoutData).forEach(week => {
+          Object.keys(workoutData[week]).forEach(day => {
+            Object.keys(workoutData[week][day]).forEach(exerciseIndex => {
+              const data = workoutData[week][day][exerciseIndex];
+              progressRows.push({
+                user_id: currentUser.id,
+                week: week,
+                day: day,
+                exercise_index: parseInt(exerciseIndex),
+                sets: data.sets,
+                reps: data.reps,
+                weight: data.weight,
+                completed: data.completed,
+                updated_at: new Date().toISOString()
+              });
+            });
+          });
+        });
+        
+        if (progressRows.length > 0) {
+          const { error } = await supabaseClient
+            .from('user_progress')
+            .upsert(progressRows, { 
+              onConflict: 'user_id,week,day,exercise_index',
+              ignoreDuplicates: false 
+            });
+          
+          if (error) throw error;
+        }
+        
       } catch (e) {
-        console.error('Failed to save state:', e);
+        console.error('Failed to save state to Supabase:', e);
       }
+    }
+    
+    // Debounced save to avoid too many DB calls
+    let saveTimeout = null;
+    function debouncedSave() {
+      if (saveTimeout) clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => saveState(), 500);
     }
 
     // ========== RENDERING ==========
@@ -1736,7 +2193,6 @@
     function switchWeek(week) {
       currentWeek = week;
       currentDay = 'day1';
-      saveState();
       renderWeekTabs();
       renderDayTabs();
       renderWeekInfo();
@@ -1745,7 +2201,6 @@
 
     function switchDay(day) {
       currentDay = day;
-      saveState();
       renderDayTabs();
       renderWorkout();
     }
@@ -1755,7 +2210,7 @@
         workoutData[currentWeek][currentDay][index] = { sets: 3, reps: '10', weight: 0, completed: false };
       }
       workoutData[currentWeek][currentDay][index][field] = field === 'weight' || field === 'sets' ? Number(value) : value;
-      saveState();
+      debouncedSave();
     }
 
     function toggleComplete(index) {
@@ -1764,7 +2219,7 @@
       }
       const wasCompleted = workoutData[currentWeek][currentDay][index].completed;
       workoutData[currentWeek][currentDay][index].completed = !wasCompleted;
-      saveState();
+      debouncedSave();
       renderDayTabs();
       renderWorkout();
       
@@ -1813,29 +2268,20 @@
         completed: true
       };
 
-      saveState();
+      debouncedSave();
       renderDayTabs();
       renderWorkout();
       showAchievement('Added!', `${name} added to workout`, '✅');
     }
 
-    function saveWorkout() {
+    async function saveWorkout() {
       const day = workoutProgram[currentWeek].days[currentDay];
       const dayData = workoutData[currentWeek][currentDay];
       
-      const workoutSession = {
-        id: Date.now(),
-        date: new Date().toISOString(),
-        week: currentWeek,
-        day: currentDay,
-        workoutName: `Week ${currentWeek.replace('week', '')} - ${day.name}: ${day.subtitle}`,
-        duration: workoutTimerSeconds,
-        exercises: []
-      };
-      
+      const exercises = [];
       day.exercises.forEach((exercise, index) => {
         if (dayData[index] && dayData[index].completed) {
-          workoutSession.exercises.push({
+          exercises.push({
             name: exercise.name,
             sets: dayData[index].sets,
             reps: dayData[index].reps,
@@ -1844,37 +2290,69 @@
         }
       });
       
-      if (workoutSession.exercises.length === 0) {
+      if (exercises.length === 0) {
         showAchievement('No Exercises', 'Complete at least one exercise', '⚠️');
         return;
       }
       
-      workoutHistory.unshift(workoutSession);
-      
-      // Stop and reset workout timer
-      stopWorkoutTimer();
-      resetWorkoutTimer();
-      
-      // Celebrate with confetti!
-      launchConfetti();
-      
-      const durationStr = workoutTimerSeconds > 0 ? ` in ${formatTime(workoutSession.duration)}` : '';
-      showAchievement('Workout Complete! 🎉', `${workoutSession.exercises.length} exercises logged${durationStr}`, '💪');
-      
-      // Remove custom exercises after saving
-      workoutProgram[currentWeek].days[currentDay].exercises = workoutProgram[currentWeek].days[currentDay].exercises.filter(e => !e.isCustom);
-      
-      // Reset completion but keep weights/sets/reps
-      Object.keys(dayData).forEach(key => {
-        if (dayData[key].completed) {
-          dayData[key].completed = false;
-        }
-      });
-      
-      saveState();
-      renderWeekTabs();
-      renderDayTabs();
-      renderWorkout();
+      try {
+        // Save to Supabase
+        const { data, error } = await supabaseClient
+          .from('workout_history')
+          .insert({
+            user_id: currentUser.id,
+            date: new Date().toISOString(),
+            week: currentWeek,
+            day: currentDay,
+            workout_name: `Week ${currentWeek.replace('week', '')} - ${day.name}: ${day.subtitle}`,
+            duration: workoutTimerSeconds,
+            exercises: exercises
+          })
+          .select()
+          .single();
+        
+        if (error) throw error;
+        
+        // Add to local history
+        workoutHistory.unshift({
+          id: data.id,
+          date: data.date,
+          week: data.week,
+          day: data.day,
+          workoutName: data.workout_name,
+          duration: data.duration,
+          exercises: data.exercises
+        });
+        
+        // Stop and reset workout timer
+        stopWorkoutTimer();
+        resetWorkoutTimer();
+        
+        // Celebrate with confetti!
+        launchConfetti();
+        
+        const durationStr = workoutTimerSeconds > 0 ? ` in ${formatTime(data.duration)}` : '';
+        showAchievement('Workout Complete! 🎉', `${exercises.length} exercises logged${durationStr}`, '💪');
+        
+        // Remove custom exercises after saving
+        workoutProgram[currentWeek].days[currentDay].exercises = workoutProgram[currentWeek].days[currentDay].exercises.filter(e => !e.isCustom);
+        
+        // Reset completion but keep weights/sets/reps
+        Object.keys(dayData).forEach(key => {
+          if (dayData[key].completed) {
+            dayData[key].completed = false;
+          }
+        });
+        
+        await saveState();
+        renderWeekTabs();
+        renderDayTabs();
+        renderWorkout();
+        
+      } catch (e) {
+        console.error('Failed to save workout:', e);
+        showAchievement('Save Failed', 'Could not save workout. Try again.', '❌');
+      }
     }
     
     // Confetti celebration
@@ -1984,13 +2462,30 @@
     }
 
     function deleteWorkout(sessionId) {
-      showConfirm('Delete Workout?', 'This action cannot be undone.', () => {
-        const index = workoutHistory.findIndex((s) => s.id === sessionId);
-        if (index === -1) return;
-        workoutHistory.splice(index, 1);
-        saveState();
-        renderProgressPage();
-        showAchievement('Deleted', 'Workout removed from history', '🗑️');
+      showConfirm('Delete Workout?', 'This action cannot be undone.', async () => {
+        try {
+          // Delete from Supabase
+          const { error } = await supabaseClient
+            .from('workout_history')
+            .delete()
+            .eq('id', sessionId)
+            .eq('user_id', currentUser.id);
+          
+          if (error) throw error;
+          
+          // Remove from local history
+          const index = workoutHistory.findIndex((s) => s.id === sessionId);
+          if (index !== -1) {
+            workoutHistory.splice(index, 1);
+          }
+          
+          renderProgressPage();
+          showAchievement('Deleted', 'Workout removed from history', '🗑️');
+          
+        } catch (e) {
+          console.error('Failed to delete workout:', e);
+          showAchievement('Delete Failed', 'Could not delete workout', '❌');
+        }
       });
     }
 
@@ -2063,7 +2558,7 @@
       if (!file) return;
 
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = async function(e) {
         try {
           const csv = e.target.result;
           const lines = csv.split('\n').slice(1); // Skip header
@@ -2116,7 +2611,28 @@
           // Sort by date descending
           workoutHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
           
-          saveState();
+          // Save restored workouts to Supabase
+          if (currentUser && newSessions.length > 0) {
+            try {
+              const historyRows = newSessions.map(session => ({
+                user_id: currentUser.id,
+                date: session.date,
+                week: session.week,
+                day: session.day,
+                workout_name: session.workoutName,
+                duration: session.duration || 0,
+                exercises: session.exercises
+              }));
+              
+              await supabaseClient.from('workout_history').insert(historyRows);
+              
+              // Reload from DB to get proper IDs
+              await loadState();
+            } catch (e) {
+              console.error('Failed to save restored workouts to Supabase:', e);
+            }
+          }
+          
           renderProgressPage();
           showAchievement('Backup Restored!', `${newSessions.length} workouts imported`, '✅');
           
